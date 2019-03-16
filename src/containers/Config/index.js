@@ -83,12 +83,6 @@ class Config extends Component {
                             <Text style={{ color: '#FFF', fontSize: 13 }}>TESTAR CONEXÃO</Text>
                         </Button>
                     </LinearGradient>
-                    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1.2, y: 0 }}
-                        colors={[Styles.colorPrimary, Styles.colorDarker]} style={{ alignSelf: 'center', width: '100%', height: 50 }}>
-                        <Button bordered onPress={this.salvar} style={{ flex: 1, width: '100%', justifyContent: 'center' }}>
-                            <Text style={{ color: '#FFF' }}>SALVAR</Text>
-                        </Button>
-                    </LinearGradient>
                 </View>
             </Container>
         );
