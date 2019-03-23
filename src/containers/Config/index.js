@@ -4,7 +4,6 @@ import { Button, Container, Header } from 'native-base';
 import { connect } from 'react-redux';
 import { loadUrl } from './actions';
 import Toast from 'react-native-simple-toast';
-import LinearGradient from 'react-native-linear-gradient';
 import Styles from '../../theme/variables/styles';
 import BackButton from '../../components/BackButton';
 
@@ -48,6 +47,12 @@ class Config extends Component {
         const { textoEndereco, textoPorta } = this.state;
         return (
             <Container>
+                <Header noShadow style={{ height: 70, backgroundColor: Styles.colorPrimary, justifyContent: 'flex-start', alignItems: 'center' }}>
+                    <View style={{ width: '100%', flexDirection: 'row', height: 70, alignItems: 'center' }}>
+                        <BackButton />
+                        <Text style={{ fontSize: 20, color: '#FFF' }}>Configurações</Text>
+                    </View>
+                </Header>
                 <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: '#FFF' }} >
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 5, paddingBottom: 5 }}>
                         <View style={{ width: '80%' }}>
@@ -75,14 +80,11 @@ class Config extends Component {
 
                     </View>
                 </ScrollView>
-                <View style={{ backgroundColor: "#FFF" }}>
-                    <LinearGradient style={{ alignSelf: 'center', width: '100%', height: 50, }}
-                        colors={['#CCC', '#CCC']} >
-                        <Button bordered style={{ flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center' }}
-                            onPress={() => { }}>
-                            <Text style={{ color: '#FFF', fontSize: 13 }}>TESTAR CONEXÃO</Text>
-                        </Button>
-                    </LinearGradient>
+                <View style={{ backgroundColor: "#CCC", height: 50 }}>
+                    <Button bordered style={{ flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center' }}
+                        onPress={() => { }}>
+                        <Text style={{ color: '#FFF', fontSize: 13 }}>TESTAR CONEXÃO</Text>
+                    </Button>
                 </View>
             </Container>
         );

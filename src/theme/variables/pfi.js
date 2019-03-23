@@ -149,7 +149,7 @@ export default {
 
   // Header
   toolbarBtnColor: "#fff",
-  toolbarDefaultBg: styles.colorPrimary,
+  toolbarDefaultBg: styles.colorDarker,
   toolbarHeight: platform === "ios" ? 64 : 56,
   toolbarIconSize: platform === "ios" ? 20 : 22,
   toolbarSearchIconSize: platform === "ios" ? 20 : 23,
@@ -235,7 +235,7 @@ export default {
   inverseSpinnerColor:styles.colorPrimary,
 
   // Tabs
-  tabBgColor: "#F8F8F8",
+  tabBgColor: styles.colorPrimary,
   tabFontSize: 15,
   tabTextColor: "#222222",
 

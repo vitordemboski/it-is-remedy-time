@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet, Text, Image,
-  ScrollView, TouchableOpacity
+  Image, Text,
+  ScrollView, TouchableOpacity,
+  TouchableHighlight, StyleSheet
 } from 'react-native';
 import { connect } from 'react-redux';
-import { Container, Header, Tab, Tabs, Right, Body, Fab, Button, View, Drawer } from 'native-base';
+import { Container, Header, Right, Body, View, Drawer, Thumbnail } from 'native-base';
 import {
   enviaMensagem
 } from './actions';
@@ -12,8 +13,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Styles from '../../theme/variables/styles';
 import Toast from 'react-native-simple-toast';
 import logoSatc from '../../../assets/logo/logoSatc.png';
-import Pesquisar from './Pesquisar';
-import SideBar from '../Config';
+import SideBar from './SideMenu';
+import Item from './Item';
+import Usuario from '../../../assets/icones/usuario.png';
+
 class App extends Component {
 
   componentWillReceiveProps(nextProps) {
@@ -27,18 +30,6 @@ class App extends Component {
     }
   }
 
-  onChangePesquisar = () => {
-    this.setState({ pesquisar: !this.state.pesquisar, textoPesquisa: '' });
-  }
-
-  changeTab = (tab) => {
-    if (tab.i === 0) {
-
-    } else if (tab.i === 1) {
-
-    }
-  }
-
   closeDrawer = () => {
     this.drawer._root.close()
   };
@@ -48,71 +39,98 @@ class App extends Component {
 
   state = {
     refreshing: false,
-    pesquisar: false,
-    textoPesquisa: ''
   }
+  listaRemedio = [
+    {
+      IDREMEDIO: 1,
+      DESCRICAO: 'ENXAKE',
+      DOSEDIARIA: 2,
+      TEMPODOSE: '12:00:00',
+      STATUS: 'A',
+      QUANTIDADE: 30,
+      NOMETRATAMENTO: 'cancêr',
+      DATAINICIO: '29/03/2019 08:45:00',
+      DATAFINAL: '29/03/2019'
+    },
+    {
+      IDREMEDIO: 2,
+      DESCRICAO: 'PENINSULINA',
+      DOSEDIARIA: 1,
+      TEMPODOSE: '8:00:00',
+      STATUS: 'A',
+      QUANTIDADE: 10,
+      NOMETRATAMENTO: 'gripe',
+      DATAINICIO: '29/03/2019 08:45:00',
+      DATAFINAL: '29/03/2019'
+    }
+  ];
 
-  onChangeTextPesq = (texto) => {
-    this.setState({ textoPesquisa: texto });
-  }
 
   render() {
     const {
       history,
       url
     } = this.props;
-    const { pesquisar, textoPesquisa } = this.state;
+     
     return (
       <Drawer
         ref={(ref) => { this.drawer = ref; }}
-        content={<SideBar navigator={this.navigator} />}
-        onClose={() => this.closeDrawer()} >
+        content={<SideBar history={history} navigator={this.navigator} />}
+        onClose={() => this.closeDrawer()}
+        side='right'
+        openDrawerOffset={0.4}
+        panCloseMask={0.4}
+      >
         <Container>
-          {pesquisar ?
-            <Header hasTabs noShadow style={{ marginBottom: 0 }}>
-              <Pesquisar onChangeTextPesq={(texto) => this.onChangeTextPesq(texto)} textoPesquisa={textoPesquisa}
-                onBack={() => this.onChangePesquisar()} />
-            </Header>
-            : (<Header hasTabs noShadow style={{ marginBottom: 10 }}>
-              <Body style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                <TouchableOpacity onPress={() => this.openDrawer()} style={{ alignItems: 'center', justifyContent: 'center', paddingTop: 3, height: 50, width: 30 }}>
-                  <Icon name='navicon' size={18} color='#000' style={{ opacity: 0.3 }} />
-                </TouchableOpacity>
-              </Body>
-              <Right style={{ marginTop: 6, alignItems: 'center' }}>
-                <TouchableOpacity onPress={() => this.onChangePesquisar()} style={{ alignItems: 'center', justifyContent: 'center', height: 50, width: 30 }}>
-                  <Icon name='search' size={18} color='#000' style={{ opacity: 0.3 }} />
-                </TouchableOpacity>
-                <View style={{ marginLeft: 10, marginTop: 5 }}>
-                  <Image source={logoSatc} style={{ width: 30, height: 34, resizeMode: 'contain' }} />
-                </View>
-              </Right>
-            </Header>)}
+          <Header hasTabs noShadow style={{ height: 60, marginBottom: 10, backgroundColor: Styles.colorPrimary }}>
+            <Body style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+              <Image source={logoSatc} style={{ width: 30, height: 34, resizeMode: 'contain' }} />
+            </Body>
+            <Right style={{ marginTop: 6, alignItems: 'center' }}>
+              <View style={{ marginLeft: 10, flexDirection: 'row' }}>
+                <Thumbnail source={Usuario} small />
+              </View>
+              <TouchableOpacity onPress={() => this.openDrawer()} style={{ alignItems: 'center', justifyContent: 'center', paddingTop: 3, height: 50, width: 30 }}>
+                <Icon name='navicon' size={18} color='#FFF' style={{ marginLeft: 10, opacity: 0.3 }} />
+              </TouchableOpacity>
+            </Right>
+          </Header>
           <Container>
-            <Tabs tabBarBackgroundColor='transparent' tabBarUnderlineStyle={{
-              backgroundColor: Styles.tabBarUnderlineStyle, width: '20%', marginLeft: '11%', height: 3
-            }}
-              locked onChangeTab={this.changeTab}>
-              <Tab heading='Á Tomar' activeTextStyle={styles.textoAtivado} textStyle={styles.texto}>
-                <ScrollView
-                  contentContainerStyle={{ flexGrow: 1, backgroundColor: '#FFF' }} >
-                  <View style={{ backgroundColor: Styles.backgroundList, flex: 1 }}>
-
-                  </View>
-                </ScrollView>
-              </Tab>
-              <Tab heading='Tomadas' activeTextStyle={styles.textoAtivado} textStyle={styles.texto}>
-                <ScrollView
-                  contentContainerStyle={{ flexGrow: 1, backgroundColor: '#FFF' }} >
-                  <View style={{ backgroundColor: Styles.backgroundList, flex: 1 }}>
-
-                  </View>
-                </ScrollView>
-              </Tab>
-            </Tabs>
-            <Fab onPress={() => { }}>
-              <Icon name='plus' />
-            </Fab>
+            <ScrollView
+              contentContainerStyle={{ flexGrow: 1, backgroundColor: '#FFF' }} >
+              <View style={{ backgroundColor: Styles.backgroundList, flex: 1 }}>
+                <View style={{ marginTop: 20 }}>
+                  <Text style={styles.textoCompartimento}>
+                    Compartimento 1
+                  </Text>
+                  <Item
+                    item={this.listaRemedio[0]}
+                    onPressNovo={() => history.push('/novo')}
+                    onPressVisualizar={(item) => { }}
+                  />
+                </View>
+                <View style={{ marginTop: 20 }}>
+                  <Text style={styles.textoCompartimento}>
+                    Compartimento 2
+                  </Text>
+                  <Item
+                    item={this.listaRemedio[1]}
+                    onPressNovo={() => history.push('/novo')}
+                    onPressVisualizar={(item) => { }}
+                  />
+                </View>
+                <View style={{ marginTop: 20 }}>
+                  <Text style={styles.textoCompartimento}>
+                    Compartimento 3
+                  </Text>
+                  <Item
+                    item={this.listaRemedio[2]}
+                    onPressNovo={() => history.push('/novo')}
+                    onPressVisualizar={(item) => { }}
+                  />
+                </View>
+              </View>
+            </ScrollView>
           </Container>
         </Container>
       </Drawer>
@@ -120,21 +138,14 @@ class App extends Component {
   }
 }
 const styles = StyleSheet.create({
-  textoAtivado: {
-    color: '#080808',
+  textoCompartimento: {
+    alignSelf: 'center',
+    color: Styles.colorPrimary,
     fontSize: 14,
-    fontWeight: 'bold'
-  },
-  texto: {
-    color: '#080808',
-    fontSize: 14,
-  },
-  topLista: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 15
+    borderBottomWidth: 0.5,
+    borderColor: '#CCC'
   }
-});
+})
 
 const mapStateToProps = (state) => {
   const app = state.app;

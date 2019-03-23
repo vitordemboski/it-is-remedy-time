@@ -10,6 +10,7 @@ import pfi from './theme/variables/pfi';
 import App from './containers/App';
 import Config from './containers/Config';
 import Splash from './containers/Splash';
+import NovoRemedio from './containers/Remedio/NovoRemedio';
 
 export default class Main extends Component {
   render() {
@@ -23,6 +24,7 @@ export default class Main extends Component {
                 <Route exact path="/" component={Splash} />
                 <Route exact path="/app" component={App} />                
                 <Route exact path="/config" component={Config} />
+                <Route exact path="/novo" component={NovoRemedio} />
               </View>
             </NativeRouter>
           </Root>
