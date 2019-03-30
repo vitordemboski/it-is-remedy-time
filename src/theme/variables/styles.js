@@ -1,7 +1,7 @@
 import color from "color";
 
 const tabBarUnderlineStyle = '#CCC';
-const backgroundList = '#FFF';
+const backgroundList = '#e0e0e0';
 const colorPrimary = '#156301';
 const corItensTop = '#FFF';
 

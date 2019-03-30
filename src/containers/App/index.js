@@ -41,9 +41,9 @@ class App extends Component {
   state = {
     refreshing: false,
   }
-  
+
   onClickVisualizar = (item) => {
-     alert('Nome: '+item.DESCRICAO+'\nTratamento: '+item.NOMETRATAMENTO);
+    this.props.history.push('/remedio', { item })
   }
 
   render() {
@@ -54,7 +54,7 @@ class App extends Component {
     } = this.props;
     return (
       <Drawer
-        ref={(ref) =>  this.drawer = ref }
+        ref={(ref) => this.drawer = ref}
         content={<SideBar history={history} navigator={this.navigator} />}
         onClose={() => this.closeDrawer()}
         side='right'
@@ -62,7 +62,7 @@ class App extends Component {
         panCloseMask={0.4}
       >
         <Container>
-          <Header hasTabs noShadow style={{ height: 60, marginBottom: 10, backgroundColor: Styles.colorPrimary }}>
+          <Header hasTabs noShadow style={{ backgroundColor: Styles.colorPrimary }}>
             <Body style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
               <Image source={logoSatc} style={{ width: 30, height: 34, resizeMode: 'contain' }} />
             </Body>
@@ -77,7 +77,8 @@ class App extends Component {
           </Header>
           <Container>
             <ScrollView
-              contentContainerStyle={{ flexGrow: 1, backgroundColor: '#FFF' }} >
+              style={{ backgroundColor: Styles.backgroundList }}
+              contentContainerStyle={{ flexGrow: 1 }} >
               <View style={{ backgroundColor: Styles.backgroundList, flex: 1 }}>
                 <View style={{ marginTop: 20 }}>
                   <Text style={styles.textoCompartimento}>

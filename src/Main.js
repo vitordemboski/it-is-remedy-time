@@ -11,6 +11,9 @@ import App from './containers/App';
 import Config from './containers/Config';
 import Splash from './containers/Splash';
 import NovoRemedio from './containers/Remedio/NovoRemedio';
+import Remedio from './containers/Remedio/VisualizarRemedio';
+
+import Stack from 'react-router-native-stack';
 
 export default class Main extends Component {
   render() {
@@ -20,11 +23,14 @@ export default class Main extends Component {
           <Root>
             <NativeRouter >
               <View style={{ flex: 1 }}>
-                <AndroidBackButton />
-                <Route exact path="/" component={Splash} />
-                <Route exact path="/app" component={App} />                
-                <Route exact path="/config" component={Config} />
-                <Route exact path="/novo" component={NovoRemedio} />
+                <Stack animationType='slide-horizontal'>
+                  <AndroidBackButton />
+                  <Route exact path="/" component={Splash} />
+                  <Route exact path="/app" component={App} />
+                  <Route exact path="/config" component={Config} />
+                  <Route exact path="/novo" component={NovoRemedio} />
+                  <Route exact path="/remedio" component={Remedio} />
+                </Stack>
               </View>
             </NativeRouter>
           </Root>
