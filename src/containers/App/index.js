@@ -33,6 +33,7 @@ class App extends Component {
   closeDrawer = () => {
     this.drawer._root.close()
   };
+
   openDrawer = () => {
     this.drawer._root.open()
   };
@@ -40,41 +41,20 @@ class App extends Component {
   state = {
     refreshing: false,
   }
-  listaRemedio = [
-    {
-      IDREMEDIO: 1,
-      DESCRICAO: 'ENXAKE',
-      DOSEDIARIA: 2,
-      TEMPODOSE: '12:00:00',
-      STATUS: 'A',
-      QUANTIDADE: 30,
-      NOMETRATAMENTO: 'cancêr',
-      DATAINICIO: '29/03/2019 08:45:00',
-      DATAFINAL: '29/03/2019'
-    },
-    {
-      IDREMEDIO: 2,
-      DESCRICAO: 'PENINSULINA',
-      DOSEDIARIA: 1,
-      TEMPODOSE: '8:00:00',
-      STATUS: 'A',
-      QUANTIDADE: 10,
-      NOMETRATAMENTO: 'gripe',
-      DATAINICIO: '29/03/2019 08:45:00',
-      DATAFINAL: '29/03/2019'
-    }
-  ];
-
+  
+  onClickVisualizar = (item) => {
+     alert('Nome: '+item.DESCRICAO+'\nTratamento: '+item.NOMETRATAMENTO);
+  }
 
   render() {
     const {
       history,
-      url
+      url,
+      listaRemedio
     } = this.props;
-     
     return (
       <Drawer
-        ref={(ref) => { this.drawer = ref; }}
+        ref={(ref) =>  this.drawer = ref }
         content={<SideBar history={history} navigator={this.navigator} />}
         onClose={() => this.closeDrawer()}
         side='right'
@@ -104,9 +84,9 @@ class App extends Component {
                     Compartimento 1
                   </Text>
                   <Item
-                    item={this.listaRemedio[0]}
-                    onPressNovo={() => history.push('/novo')}
-                    onPressVisualizar={(item) => { }}
+                    item={listaRemedio[0]}
+                    onPressNovo={() => history.push('/novo', { compartimento: 1 })}
+                    onPressVisualizar={(item) => this.onClickVisualizar(item)}
                   />
                 </View>
                 <View style={{ marginTop: 20 }}>
@@ -114,9 +94,9 @@ class App extends Component {
                     Compartimento 2
                   </Text>
                   <Item
-                    item={this.listaRemedio[1]}
-                    onPressNovo={() => history.push('/novo')}
-                    onPressVisualizar={(item) => { }}
+                    item={listaRemedio[1]}
+                    onPressNovo={() => history.push('/novo', { compartimento: 2 })}
+                    onPressVisualizar={(item) => this.onClickVisualizar(item)}
                   />
                 </View>
                 <View style={{ marginTop: 20 }}>
@@ -124,9 +104,9 @@ class App extends Component {
                     Compartimento 3
                   </Text>
                   <Item
-                    item={this.listaRemedio[2]}
-                    onPressNovo={() => history.push('/novo')}
-                    onPressVisualizar={(item) => { }}
+                    item={listaRemedio[2]}
+                    onPressNovo={() => history.push('/novo', { compartimento: 3 })}
+                    onPressVisualizar={(item) => this.onClickVisualizar(item)}
                   />
                 </View>
               </View>
@@ -155,11 +135,11 @@ const mapStateToProps = (state) => {
     loading: app.get('loading'),
     sucesso: app.get('sucesso'),
     error: app.get('error'),
+    listaRemedio: app.get('listaRemedio')
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  onEnviarMensagem: (msg) => dispatch(loadRecebidas(msg)),
 });
 
 const AppPage = connect(

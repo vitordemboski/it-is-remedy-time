@@ -4,7 +4,7 @@ import appReducer from './containers/App/reducer';
 
 const reducers = combineReducers({
     config: configReducer,
-    app: appReducer
+    app: appReducer,
 });
 
 export default reducers;

@@ -1,6 +1,8 @@
 import { Map, OrderedMap } from 'immutable';
+import { AsyncStorage } from 'react-native';
 
 const initialState = Map({
+  listaRemedio: [{}, {}, {}],
   enviando: false,
   sucesso: false,
   error: false,
@@ -27,6 +29,34 @@ const handleEnviarMensagemFailed = (state, action) => {
     .set('error', action.error);
 };
 
+const handleLoadRemedio = (state, action) => {
+  return state
+    .set('listaRemedio', action.listaRemedio)
+    .set('loading', true)
+    .set('error', false);
+};
+
+const handleNovoRemedio = (state, action) => {
+  let listaRemedio = action.lista;
+  listaRemedio[action.remedio.COMPARTIMENTO - 1] = action.remedio;
+  AsyncStorage.setItem('listaRemedio', JSON.stringify(listaRemedio));
+  return state
+  .set('listaRemedio', listaRemedio);
+};
+
+const handleNovoRemedioSuccess = (state, action) => {
+  return state
+    .set('loading', false)
+    .set('error', false);
+};
+
+const handleNovoRemedioFailed = (state, action) => {
+  return state
+    .set('loading', false)
+    .set('error', action.error);
+};
+
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'ENVIAR_MENSAGEM':
@@ -35,6 +65,14 @@ const reducer = (state = initialState, action) => {
       return handleEnviarMensagemSuccess(state, action);
     case 'ENVIAR_MENSAGEM_FAILED':
       return handleEnviarMensagemFailed(state, action);
+    case 'LOAD_REMEDIO':
+      return handleLoadRemedio(state, action);
+    case 'NOVO_REMEDIO':
+      return handleNovoRemedio(state, action);
+    case 'NOVO_REMEDIO_SUCCESS':
+      return handleNovoRemedioSuccess(state, action);
+    case 'NOVO_REMEDIO_FAILED':
+      return handleNovoRemedioFailed(state, action);
     default:
       return state;
   }

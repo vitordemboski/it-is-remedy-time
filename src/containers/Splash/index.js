@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image, StatusBar } from 'react-native';
+import { View, Image, StatusBar, AsyncStorage } from 'react-native';
 import { Redirect } from 'react-router-native';
 import { connect } from 'react-redux';
 import { Container, Content, Text } from 'native-base';
@@ -7,6 +7,7 @@ import { API_URL } from '../../sdk/constants';
 import { loadUrl } from '../Config/actions';
 import logoSatc from '../../../assets/logo/logoSatcCinza.png';
 import satc from '../../../assets/satc/satc.png';
+import { loadRemedio } from '../App/actions';
 
 class Splash extends Component {
   state = {
@@ -19,7 +20,13 @@ class Splash extends Component {
   }
 
   componentDidMount = async () => {
-    const { onLoadUrl } = this.props;
+    const { onLoadUrl, onLoadRemedio } = this.props;
+    const lista = await AsyncStorage.getItem('listaRemedio');
+    if (lista === null) {
+     AsyncStorage.setItem('listaRemedio', JSON.stringify([{}, {}, {}]));
+    } else {
+      onLoadRemedio(JSON.parse(lista));
+    }
     const url = await API_URL();
     onLoadUrl(url);
     setTimeout(() => (this.setState({ timer: true })), 2500);
@@ -61,6 +68,7 @@ class Splash extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   onLoadUrl: (url) => dispatch(loadUrl(url)),
+  onLoadRemedio: (listaRemedio) => dispatch(loadRemedio(listaRemedio)),
 });
 
 const SplashPage = connect(
