@@ -6,5 +6,9 @@ export const novoRemedio = (remedio, lista) => ({ type: 'NOVO_REMEDIO', remedio,
 export const novoRemedioSuccess = () => ({ type: 'NOVO_REMEDIO_SUCCESS' });
 export const novoRemedioFailed = () => ({ type: 'NOVO_REMEDIO_FAILED' });
 
+export const deleteRemedio = (compartimento) => ({ type: 'DELETE_REMEDIO', compartimento });
+export const deleteRemedioSuccess = () => ({ type: 'DELETE_REMEDIO_SUCCESS' });
+export const deleteRemedioFailed = () => ({ type: 'DELETE_REMEDIO_FAILED' });
+
 export const loadRemedio = (listaRemedio) => ({ type: 'LOAD_REMEDIO', listaRemedio });
 

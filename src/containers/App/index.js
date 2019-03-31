@@ -5,7 +5,7 @@ import {
   TouchableHighlight, StyleSheet
 } from 'react-native';
 import { connect } from 'react-redux';
-import { Container, Header, Right, Body, View, Drawer, Thumbnail } from 'native-base';
+import { Container, Header, Right, Body, View, Thumbnail } from 'native-base';
 import {
   enviaMensagem
 } from './actions';
@@ -16,6 +16,7 @@ import logoSatc from '../../../assets/logo/logoSatc.png';
 import SideBar from './SideMenu';
 import Item from './Item';
 import Usuario from '../../../assets/icones/usuario.png';
+import SideMenu from 'react-native-side-menu';
 
 class App extends Component {
 
@@ -30,16 +31,9 @@ class App extends Component {
     }
   }
 
-  closeDrawer = () => {
-    this.drawer._root.close()
-  };
-
-  openDrawer = () => {
-    this.drawer._root.open()
-  };
-
   state = {
     refreshing: false,
+    menuIsOpen: false
   }
 
   onClickVisualizar = (item) => {
@@ -47,20 +41,12 @@ class App extends Component {
   }
 
   render() {
-    const {
-      history,
-      url,
-      listaRemedio
-    } = this.props;
+    const { history, url, listaRemedio } = this.props;
+    const { menuIsOpen } = this.state;
     return (
-      <Drawer
-        ref={(ref) => this.drawer = ref}
-        content={<SideBar history={history} navigator={this.navigator} />}
-        onClose={() => this.closeDrawer()}
-        side='right'
-        openDrawerOffset={0.4}
-        panCloseMask={0.4}
-      >
+      <SideMenu menuPosition='right' isOpen={menuIsOpen} onChange={(isOpen) => this.setState({ menuIsOpen: isOpen })}
+        menu={menuIsOpen ? (<SideBar history={history} url={url} menuIsOpen={menuIsOpen}
+          closeMenu={() => this.setState({ menuIsOpen: false })} />) : null}>
         <Container>
           <Header hasTabs noShadow style={{ backgroundColor: Styles.colorPrimary }}>
             <Body style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
@@ -70,7 +56,7 @@ class App extends Component {
               <View style={{ marginLeft: 10, flexDirection: 'row' }}>
                 <Thumbnail source={Usuario} small />
               </View>
-              <TouchableOpacity onPress={() => this.openDrawer()} style={{ alignItems: 'center', justifyContent: 'center', paddingTop: 3, height: 50, width: 30 }}>
+              <TouchableOpacity onPress={() => this.setState({ menuIsOpen: true })} style={{ alignItems: 'center', justifyContent: 'center', paddingTop: 3, height: 50, width: 30 }}>
                 <Icon name='navicon' size={18} color='#FFF' style={{ marginLeft: 10, opacity: 0.3 }} />
               </TouchableOpacity>
             </Right>
@@ -114,7 +100,7 @@ class App extends Component {
             </ScrollView>
           </Container>
         </Container>
-      </Drawer>
+      </SideMenu>
     );
   }
 }

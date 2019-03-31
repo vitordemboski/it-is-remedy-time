@@ -19,18 +19,18 @@ import IconFonte from 'react-native-vector-icons/MaterialCommunityIcons';
 class NovoRemedio extends Component {
 
     onClickSalvar = async () => {
-        const { textoNome, textoQuantidade, textoHoras, textoTratamento, textoHorasfalta } = this.state;
+        const { textoNome, textoQuantidade, textoHoras, textoTratamento, textoHorasfalta, textoQuantDose } = this.state;
         const { onNovoRemedio, history } = this.props;
         const { compartimento } = this.props.location.state;
-        if (textoNome !== '' && textoHoras !== '' && textoQuantidade !== '' && textoTratamento !== '') {
+        if (textoNome !== '' && textoHoras !== '' && textoQuantidade !== '' && textoTratamento !== '' && textoQuantDose !== '') {
             if (moment.duration(textoHoras + ':00') > moment.duration(textoHorasfalta + ':00')) {
                 const timeHoras = moment.duration(textoHoras + ':00');
                 const timeHorasFalta = moment.duration(textoHorasfalta + ':00');
                 const datetimeInicio = moment().subtract(timeHoras).add(timeHorasFalta);
 
-                const timeHorasFinal = moment.duration(textoHoras + ':00') * textoQuantidade;
+                const timeHorasFinal = moment.duration(textoHoras + ':00') * (textoQuantidade / textoQuantDose);
                 const datetimeFinal = moment(datetimeInicio).add(timeHorasFinal);
-                const listaHistorico = this.calculaHistorico(datetimeInicio, textoHoras + ':00', textoQuantidade);
+                const listaHistorico = this.calculaHistorico(datetimeInicio, textoHoras + ':00', textoQuantidade / textoQuantDose);
                 const remedio = {
                     IDREMEDIO: Math.random() * 10,
                     DESCRICAO: textoNome,
@@ -39,8 +39,9 @@ class NovoRemedio extends Component {
                     TEMPODOSE: textoHoras,
                     STATUS: 'A',
                     QUANTIDADE: textoQuantidade,
-                    DATAINICIO: moment(datetimeInicio),
-                    DATAFINAL: moment(datetimeFinal),
+                    QUANTIDADEDOSE: textoQuantDose,
+                    DATAINICIO: datetimeInicio,
+                    DATAFINAL: datetimeFinal,
                     HISTORICO: listaHistorico
                 };
                 let lista = await AsyncStorage.getItem('listaRemedio')
@@ -81,11 +82,16 @@ class NovoRemedio extends Component {
                 duration: duration
             }).start();
         } else if (input === 3) {
-            Animated.timing(this.state.animatedScaleHora, {
+            Animated.timing(this.state.animatedScaleQuantDose, {
                 toValue: tamanho,
                 duration: duration
             }).start();
         } else if (input === 4) {
+            Animated.timing(this.state.animatedScaleHora, {
+                toValue: tamanho,
+                duration: duration
+            }).start();
+        } else if (input === 5) {
             Animated.timing(this.state.animatedScaleHoraFalta, {
                 toValue: tamanho,
                 duration: duration
@@ -111,11 +117,16 @@ class NovoRemedio extends Component {
                 duration: duration
             }).start();
         } else if (input === 3) {
-            Animated.timing(this.state.animatedScaleHora, {
+            Animated.timing(this.state.animatedScaleQuantDose, {
                 toValue: tamanho,
                 duration: duration
             }).start();
         } else if (input === 4) {
+            Animated.timing(this.state.animatedScaleHora, {
+                toValue: tamanho,
+                duration: duration
+            }).start();
+        } else if (input === 5) {
             Animated.timing(this.state.animatedScaleHoraFalta, {
                 toValue: tamanho,
                 duration: duration
@@ -125,6 +136,7 @@ class NovoRemedio extends Component {
     state = {
         textoNome: '',
         textoQuantidade: '',
+        textoQuantDose: '',
         textoHoras: '',
         textoTratamento: '',
         textoHorasfalta: '',
@@ -133,15 +145,21 @@ class NovoRemedio extends Component {
         animatedScaleTratamento: new Animated.Value(1),
         animatedScaleHora: new Animated.Value(1),
         animatedScaleHoraFalta: new Animated.Value(1),
+        animatedScaleQuantDose: new Animated.Value(1),
+        compartimento: 0
 
     }
 
+    componentWillMount() {
+        const { compartimento } = this.props.location.state;
+        this.setState({ compartimento });
+    }
 
     render() {
         const { textoNome, textoQuantidade, textoHoras, textoTratamento,
             textoHorasfalta, animatedScaleNome, animatedScaleQuantidade,
-            animatedScaleTratamento, animatedScaleHora, animatedScaleHoraFalta } = this.state;
-        const { compartimento } = this.props.location.state;
+            animatedScaleTratamento, animatedScaleHora, animatedScaleHoraFalta,
+            animatedScaleQuantDose, compartimento, textoQuantDose } = this.state;
         return (
             <Container>
                 <Header noShadow style={{ backgroundColor: Styles.colorPrimary, justifyContent: 'flex-start', alignItems: 'center' }}>
@@ -198,10 +216,29 @@ class NovoRemedio extends Component {
                                             returnKeyType='next'
                                             onFocus={() => this.onFocusInput(2)}
                                             onBlur={() => this.onBlurInput(2)}
-                                            onSubmitEditing={() => focusInput(this.inputHoras)}
+                                            onSubmitEditing={() => focusInput(this.inputQuantDose)}
                                             ref={(e) => this.inputQuantidade = e}
                                             value={textoQuantidade}
                                             onChangeText={(texto) => this.setState({ textoQuantidade: texto })}
+                                            style={{ flex: 1 }}
+                                        />
+                                    </View>
+                                </Animated.View>
+                            </View>
+                            <View style={{ marginTop: 30, paddingBottom: 10 }}>
+                                <Animated.View style={{ transform: [{ scale: animatedScaleQuantDose }] }}>
+                                    <Text style={styles.texto}>Quantidade tomada por dose</Text>
+                                    <View style={[styles.input, { width: '30%' }]}>
+                                        <TextInputMask
+                                            mask='[0]'
+                                            keyboardType='numeric'
+                                            returnKeyType='next'
+                                            onFocus={() => this.onFocusInput(3)}
+                                            onBlur={() => this.onBlurInput(3)}
+                                            onSubmitEditing={() => focusInput(this.inputHoras)}
+                                            ref={(e) => this.inputQuantDose = e}
+                                            value={textoQuantDose}
+                                            onChangeText={(texto) => this.setState({ textoQuantDose: texto })}
                                             style={{ flex: 1 }}
                                         />
                                     </View>
@@ -216,8 +253,8 @@ class NovoRemedio extends Component {
                                         mode="time"
                                         placeholder=" "
                                         style={{ marginTop: 10 }}
-                                        onOpenModal={() => this.onFocusInput(3)}
-                                        onCloseModal={() => this.onBlurInput(3)}
+                                        onOpenModal={() => this.onFocusInput(4)}
+                                        onCloseModal={() => this.onBlurInput(4)}
                                         androidMode='spinner'
                                         iconComponent={<Icon name='timer' size={30} style={{ marginLeft: 5, marginTop: 10 }} />}
 
@@ -236,8 +273,8 @@ class NovoRemedio extends Component {
                                         date={textoHorasfalta}
                                         mode="time"
                                         placeholder=" "
-                                        onOpenModal={() => this.onFocusInput(4)}
-                                        onCloseModal={() => this.onBlurInput(4)}
+                                        onOpenModal={() => this.onFocusInput(5)}
+                                        onCloseModal={() => this.onBlurInput(5)}
                                         androidMode='spinner'
                                         style={{ marginTop: 10 }}
                                         iconComponent={<Icon name='timer' size={30} style={{ marginLeft: 5, marginTop: 10 }} />}
