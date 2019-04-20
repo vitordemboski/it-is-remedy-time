@@ -37,7 +37,7 @@ const handleLoadRemedio = (state, action) => {
 };
 
 const handleNovoRemedio = (state, action) => {
-  let listaRemedio = action.lista;
+  const listaRemedio = action.lista;
   listaRemedio[action.remedio.COMPARTIMENTO - 1] = action.remedio;
   AsyncStorage.setItem('listaRemedio', JSON.stringify(listaRemedio));
   return state
@@ -54,13 +54,13 @@ const handleNovoRemedioSuccess = (state, action) => {
 const handleNovoRemedioFailed = (state, action) => {
   return state
     .set('loading', false)
-    .set('error', action.error);
+    .set('error', false);
 };
 
 const handleDeleteRemedio = (state, action) => {
 
   const listaRemedio = state.get('listaRemedio');
-  listaRemedio[action.compartimento - 1] = {}; 
+  listaRemedio[action.compartimento - 1] = {};
 
   AsyncStorage.setItem('listaRemedio', JSON.stringify(listaRemedio));
   return state
@@ -73,6 +73,17 @@ const handleDeleteRemedioSuccess = (state, action) => {
     .set('error', false);
 };
 
+const handleFinalizarRemedio = (state, action) => {
+  const remedio = action.item;
+
+  const listaRemedio = state.get('listaRemedio');
+  remedio.STATUS = 'F';
+  listaRemedio[remedio.COMPARTIMENTO - 1] = remedio;
+
+  return state
+    .set('listaRemedio', listaRemedio);
+
+};
 
 const handleDeleteRemedioFailed = (state, action) => {
   return state
@@ -102,6 +113,8 @@ const reducer = (state = initialState, action) => {
       return handleDeleteRemedioSuccess(state, action);
     case 'DELETE_REMEDIO_FAILED':
       return handleDeleteRemedioFailed(state, action);
+    case 'FINALIZAR_REMEDIO':
+      return handleFinalizarRemedio(state, action);
     default:
       return state;
   }

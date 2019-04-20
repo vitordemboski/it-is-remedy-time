@@ -12,3 +12,4 @@ export const deleteRemedioFailed = () => ({ type: 'DELETE_REMEDIO_FAILED' });
 
 export const loadRemedio = (listaRemedio) => ({ type: 'LOAD_REMEDIO', listaRemedio });
 
+export const finalizarRemedio  = (item) => ({ type: 'FINALIZAR_REMEDIO', item });

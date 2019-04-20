@@ -23,14 +23,12 @@ export default class Main extends Component {
           <Root>
             <NativeRouter >
               <View style={{ flex: 1 }}>
-                <Stack animationType='slide-horizontal'>
                   <AndroidBackButton />
                   <Route exact path="/" component={Splash} />
                   <Route exact path="/app" component={App} />
                   <Route exact path="/config" component={Config} />
                   <Route exact path="/novo" component={NovoRemedio} />
                   <Route exact path="/remedio" component={Remedio} />
-                </Stack>
               </View>
             </NativeRouter>
           </Root>

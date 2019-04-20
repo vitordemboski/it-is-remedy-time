@@ -4,6 +4,7 @@ import { Text, Thumbnail, Icon } from 'native-base';
 import Usuario from '../../../../assets/icones/usuario.png';
 import logoSatc from '../../../../assets/logo/logoSatcCinza.png';
 import Icone from 'react-native-vector-icons/FontAwesome';
+import Toast from 'react-native-simple-toast';
 
 export default class SideMenu extends Component {
     componentWillMount = async () => {
@@ -22,9 +23,13 @@ export default class SideMenu extends Component {
 
     onClickNome = (salvar) => {
         const { textoNome, isEdit } = this.state;
-        salvar ?
-            AsyncStorage.setItem('nomeUsuario', textoNome) : null;
-        this.setState({ isEdit: !isEdit })
+        if (textoNome.trim() != '') {
+            salvar ?
+                AsyncStorage.setItem('nomeUsuario', textoNome) : null;
+            this.setState({ isEdit: !isEdit })
+        }else{
+            Toast.show('Digite um nome!!');
+        }
     }
 
     render() {

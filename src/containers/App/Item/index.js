@@ -28,7 +28,8 @@ export default class Item extends Component {
 
   state = {
     scale: new Animated.Value(1),
-    disabled: false
+    disabled: false,
+    finalizado: this.props.item.STATUS === 'F'
   }
 
   getTimeAgo = (date) => {
@@ -38,24 +39,31 @@ export default class Item extends Component {
   calculaTempoRestante = (historico) => {
     const diaAtual = moment();
     let dataDose = null;
-    historico.forEach(data => {
+    historico.forEach(hist => {
+      const data = hist.data;
       if (dataDose === null) {
         if (diaAtual.isBefore(data)) {
           dataDose = data;
         }
       }
     });
-    return this.getTimeAgo(dataDose)
+    if (dataDose === null) {
+      this.props.onFinalizarRemedio(this.props.item);
+      this.setState({ finalizado: true });
+    } else {
+      return this.getTimeAgo(dataDose)
+    }
   }
 
   render() {
     const { item, onPressNovo, onPressVisualizar } = this.props;
+    const { finalizado } = this.state;
     const itemVisualizar = item.COMPARTIMENTO;
     const onPress = itemVisualizar ? () => onPressVisualizar(item) : () => onPressNovo();
 
     return (
       <View style={{ padding: 10 }}>
-        <Animated.View style={{ alignSelf: 'center', width: '100%', borderRadius: 20, elevation: 2, backgroundColor: '#FFF', transform: [{ scale: this.state.scale }] }}>
+        <Animated.View style={{ alignSelf: 'center', width: '100%', opacity: finalizado ? 0.3 : null, borderRadius: 20, elevation: 2, backgroundColor: '#FFF', transform: [{ scale: this.state.scale }] }}>
           <TouchableWithoutFeedback disabled={this.state.disabled} onPressIn={() => this.animateIn()} onPressOut={() => this.animateOut()} onPress={() => { onPress(); this.setState({ disabled: true }) }}>
             <ListItem>
               <View style={{
@@ -72,16 +80,20 @@ export default class Item extends Component {
                   <Text style={{ color: "#000", fontWeight: "bold", fontSize: 12, width: '60%' }} numberOfLines={1} >
                     {itemVisualizar ? item.DESCRICAO : null}
                   </Text>
-                  <Text style={{ color: "#333333", fontSize: 10 }}>
-                    {itemVisualizar ? 'Proxima dose' : null}
-                  </Text>
+                  {finalizado ? <Text style={{ color: "#333333", fontSize: 10 }}>
+                    Finalizado
+                  </Text> :
+                    <Text style={{ color: "#333333", fontSize: 10 }}>
+                      {itemVisualizar ? 'Proxima dose' : null}
+                    </Text>
+                  }
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                   <Text style={{ color: "#333333", fontSize: 12 }} numberOfLines={1}>
                     {itemVisualizar ? 'Tratamento de ' + item.NOMETRATAMENTO : null}
                   </Text>
-                  <Text style={{ color: "#333333", fontSize: 10 }}>
-                    {itemVisualizar ? this.calculaTempoRestante(item.HISTORICO) : null}
+                  <Text style={{ color: "#333333", fontSize: 10, marginLeft: 4 }}>
+                    {itemVisualizar ? finalizado ? '' : this.calculaTempoRestante(item.HISTORICO) : null}
                   </Text>
                 </View>
               </Body>

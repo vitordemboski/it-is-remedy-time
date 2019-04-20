@@ -7,7 +7,7 @@ import {
 import { connect } from 'react-redux';
 import { Container, Header, Right, Body, View, Thumbnail } from 'native-base';
 import {
-  enviaMensagem
+  enviaMensagem, finalizarRemedio
 } from './actions';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Styles from '../../theme/variables/styles';
@@ -17,6 +17,7 @@ import SideBar from './SideMenu';
 import Item from './Item';
 import Usuario from '../../../assets/icones/usuario.png';
 import SideMenu from 'react-native-side-menu';
+import { Separador, Footer } from '../../components';
 
 class App extends Component {
 
@@ -41,7 +42,7 @@ class App extends Component {
   }
 
   render() {
-    const { history, url, listaRemedio } = this.props;
+    const { history, url, listaRemedio, onFinalizarRemedio } = this.props;
     const { menuIsOpen } = this.state;
     return (
       <SideMenu menuPosition='right' isOpen={menuIsOpen} onChange={(isOpen) => this.setState({ menuIsOpen: isOpen })}
@@ -72,6 +73,7 @@ class App extends Component {
                   </Text>
                   <Item
                     item={listaRemedio[0]}
+                    onFinalizarRemedio={onFinalizarRemedio}
                     onPressNovo={() => history.push('/novo', { compartimento: 1 })}
                     onPressVisualizar={(item) => this.onClickVisualizar(item)}
                   />
@@ -82,6 +84,7 @@ class App extends Component {
                   </Text>
                   <Item
                     item={listaRemedio[1]}
+                    onFinalizarRemedio={onFinalizarRemedio}
                     onPressNovo={() => history.push('/novo', { compartimento: 2 })}
                     onPressVisualizar={(item) => this.onClickVisualizar(item)}
                   />
@@ -92,6 +95,7 @@ class App extends Component {
                   </Text>
                   <Item
                     item={listaRemedio[2]}
+                    onFinalizarRemedio={onFinalizarRemedio}
                     onPressNovo={() => history.push('/novo', { compartimento: 3 })}
                     onPressVisualizar={(item) => this.onClickVisualizar(item)}
                   />
@@ -99,6 +103,8 @@ class App extends Component {
               </View>
             </ScrollView>
           </Container>
+          <Separador />
+          <Footer />
         </Container>
       </SideMenu>
     );
@@ -127,6 +133,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  onFinalizarRemedio: (item) => dispatch(finalizarRemedio(item)),
 });
 
 const AppPage = connect(

@@ -1,13 +1,15 @@
 import { Map, OrderedMap } from 'immutable';
 
 const initialState = Map({
-  url:''
+  url: ''
 });
 
 const handleLoadUrl = (state, action) => {
   return state
     .set('url', action.url);
 };
+
+
 
 
 const reducer = (state = initialState, action) => {

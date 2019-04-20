@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { loadUrl } from './actions';
 import Toast from 'react-native-simple-toast';
 import Styles from '../../theme/variables/styles';
-import BackButton from '../../components/BackButton';
+import { BackButton } from '../../components';
 
 class Config extends Component {
 
