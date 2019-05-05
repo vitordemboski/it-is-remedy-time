@@ -45,7 +45,7 @@ class Remedio extends Component {
             if (duration === null) {
                 if (diaAtual.isBefore(hist.data)) {
                     duration = moment(data).diff(diaAtual, 'milliseconds');
-                    this.setState({ doseTomada: hist.dose, durationTime: duration });
+                    this.setState({ doseTomada: hist.dose - 1, durationTime: duration });
                 }
             }
         });
@@ -129,9 +129,9 @@ class Remedio extends Component {
                                 onChangeText={(texto) => this.onChangeText(texto, 2)} />
                             <EditarItem titulo='Dose a cada' value={textoHoras + ' horas'}
                                 disabled={true} onChangeText={() => { }} />
-                            <EditarItem disabled={true} titulo='Dose tomadas' value={doseTomada === item.QUANTIDADE / item.QUANTIDADEDOSE ?doseTomada:doseTomada-1 + ' de ' + item.QUANTIDADE / item.QUANTIDADEDOSE}
+                            <EditarItem disabled={true} titulo='Dose tomadas' value={doseTomada + ' de ' + item.QUANTIDADE / item.QUANTIDADEDOSE}
                                 onChangeText={() => { }} />
-                            <Text style={{ alignSelf: 'center', color: '#818181', fontSize: 14, fontWeight: '500', letterSpacing: 1.3, marginTop: 25 }}>Progresso</Text>
+                            <Text style={{ alignSelf: 'center', color: '#818181', fontSize: 14, fontWeight: '500', letterSpacing: 1.3 }}>Progresso</Text>
                             <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                                 <View>
                                     <Text style={{ textAlign: 'center', alignSelf: 'center', color: '#818181', fontSize: 12, fontWeight: '500', letterSpacing: 1.3 }}>
