@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, ScrollView, Image, Alert } from 'react-native';
+import { Text, View, ScrollView, Image, Alert } from 'react-native';
 import { Container, Header, Button } from 'native-base';
 import { connect } from 'react-redux';
 import Toast from 'react-native-simple-toast';
@@ -13,6 +13,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import TimerCountdown from "react-native-timer-countdown";
 import LinearGradient from 'react-native-linear-gradient';
 import Slider from '@react-native-community/slider';
+
 class Remedio extends Component {
 
     state = {
@@ -49,11 +50,11 @@ class Remedio extends Component {
             }
         });
         if (duration === null) {
-            this.setState({ doseTomada: historico[historico.length].dose });
+            this.setState({ doseTomada: historico[historico.length - 1].dose });
         }
     }
     onChangeText = (texto, campo) => {
-        let { item, textoNome, textoQuantidade, textoHoras, textoTratamento, textoQuantDose } = this.state;
+        let { item, textoNome, textoQuantidade, textoTratamento, textoQuantDose } = this.state;
         if (campo === 0) {
             textoNome = texto
             this.setState({ textoNome });
@@ -61,11 +62,15 @@ class Remedio extends Component {
             textoTratamento = texto
             this.setState({ textoTratamento });
         } else if (campo === 2) {
-            textoQuantDose = texto
-            this.setState({ textoQuantDose });
+            if (parseInt(texto) >= 0 && parseInt(texto) <= 10) {
+                textoQuantDose = texto
+                this.setState({ textoQuantDose });
+            }
         } else if (campo === 3) {
-            textoQuantidade = texto
-            this.setState({ textoQuantidade });
+            if (parseInt(texto) >= 0) {
+                textoQuantidade = texto
+                this.setState({ textoQuantidade });
+            }
         }
         if (textoNome != item.DESCRICAO || item.QUANTIDADE != textoQuantidade ||
             item.NOMETRATAMENTO != textoTratamento || item.QUANTIDADEDOSE != textoQuantDose) {
@@ -75,10 +80,22 @@ class Remedio extends Component {
         }
     }
 
-    onClickDelete = (compartimento) => {
+    onClickDelete = (compartimento, Nome) => {
         const { onDelete, history } = this.props;
-        onDelete(compartimento);
-        history.goBack();
+        Alert.alert('Deletar Remedio', 'Realmente deseja deletar ' + Nome + '?', [
+            {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+            },
+            {
+                text: 'OK', onPress: () => {
+                    onDelete(compartimento);
+                    history.goBack();
+                },
+            }
+        ])
+
     }
 
     render() {
@@ -95,51 +112,50 @@ class Remedio extends Component {
                             <TimerCountdown
                                 initialMilliseconds={durationTime}
                                 style={{ color: '#FFF', fontSize: 18, marginLeft: 5, marginTop: 4 }}
-                                onExpire={() => Alert.alert('Remedio', 'Está na hora do remedio !!')}
                             />
                         </View>
                     </View>
                 </Header>
-                <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={{ flexGrow: 1, backgroundColor: '#FFF' }} >
+                <ScrollView keyboardShouldPersistTaps='handled' showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, backgroundColor: Styles.backgroundList }} >
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-evenly' }}>
-                        <View style={{ width: '80%' }}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <EditarItem titulo='Nome do Remedio' refer={(e) => this.inputNome = e} inputFocus={this.inputTratamento} value={textoNome}
-                                    onChangeText={(texto) => this.onChangeText(texto, 0)} />
-                                <EditarItem titulo='Nome da doença' refer={(e) => this.inputTratamento = e} inputFocus={this.inputQuantDose} value={textoTratamento}
-                                    onChangeText={(texto) => this.onChangeText(texto, 1)} />
-                            </View>
-                            <View style={{ flexDirection: 'row', marginTop: 40, justifyContent: 'space-between' }}>
-                                <EditarItem type='inteiro' mask='[0]' titulo='Quantidade por dose' refer={(e) => this.inputQuantDose = e} inputFocus={this.inputQuant} value={textoQuantDose}
-                                    onChangeText={(texto) => this.onChangeText(texto, 2)} />
-                                <EditarItem type='inteiro' mask='[000]' titulo='Quantidade' refer={(e) => this.inputQuant = e} value={textoQuantidade}
-                                    onChangeText={(texto) => this.onChangeText(texto, 3)} />
-                            </View>
-                            <View style={{ flexDirection: 'row', marginTop: 40, justifyContent: 'space-between' }}>
-                                <EditarItem titulo='Dose a cada' value={textoHoras + ' horas'}
-                                    disabled={true} onChangeText={() => { }} />
-                                <EditarItem disabled={true} titulo='Dose tomadas' value={doseTomada + ' de ' + item.QUANTIDADE / item.QUANTIDADEDOSE}
-                                    onChangeText={() => { }} />
-                            </View>
-                            <Text style={{ alignSelf: 'center', color: '#818181', fontSize: 14, fontWeight: '500', letterSpacing: 1.3, marginTop: 40 }}>Progresso</Text>
+                        <View style={{ backgroundColor: '#FFF', margin: 12, padding: 15, borderRadius: 10 }}>
+                            <EditarItem titulo='Nome do Remedio' refer={(e) => this.inputNome = e} inputFocus={this.inputTratamento} value={textoNome}
+                                onChangeText={(texto) => this.onChangeText(texto, 0)} />
+                            <EditarItem titulo='Nome da doença' refer={(e) => this.inputTratamento = e} inputFocus={this.inputQuantDose} value={textoTratamento}
+                                onChangeText={(texto) => this.onChangeText(texto, 1)} />
+                            <EditarItem type='inteiro' mask='[000]' titulo='Quantidade' refer={(e) => this.inputQuant = e} value={textoQuantidade}
+                                onChangeText={(texto) => this.onChangeText(texto, 3)} />
+                            <EditarItem type='inteiro' mask='[0]' titulo='Quantidade por dose' refer={(e) => this.inputQuantDose = e} inputFocus={this.inputQuant} value={textoQuantDose}
+                                onChangeText={(texto) => this.onChangeText(texto, 2)} />
+                            <EditarItem titulo='Dose a cada' value={textoHoras + ' horas'}
+                                disabled={true} onChangeText={() => { }} />
+                            <EditarItem disabled={true} titulo='Dose tomadas' value={doseTomada === item.QUANTIDADE / item.QUANTIDADEDOSE ?doseTomada:doseTomada-1 + ' de ' + item.QUANTIDADE / item.QUANTIDADEDOSE}
+                                onChangeText={() => { }} />
+                            <Text style={{ alignSelf: 'center', color: '#818181', fontSize: 14, fontWeight: '500', letterSpacing: 1.3, marginTop: 25 }}>Progresso</Text>
                             <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                                 <View>
-                                    <Text style={{ alignSelf: 'center', color: '#818181', fontSize: 13, fontWeight: '500', letterSpacing: 1.3 }}>{moment(item.DATAINICIO).format('DD/MM/YYYY')}</Text>
+                                    <Text style={{ textAlign: 'center', alignSelf: 'center', color: '#818181', fontSize: 12, fontWeight: '500', letterSpacing: 1.3 }}>
+                                        {moment(item.DATAINICIO).format('DD/MM/YYYY') + '\n' + moment(item.DATAINICIO).format('HH:mm')}
+                                    </Text>
                                 </View>
                                 <View style={{ flex: 1, paddingTop: 20 }}>
                                     <Slider
                                         style={{ width: '100%' }}
                                         minimumValue={0}
                                         disabled={true}
-                                        value={moment().diff(item.DATAINICIO, 'day')}
-                                        maximumValue={moment(item.DATAFINAL).diff(item.DATAINICIO, 'day')}
+                                        value={moment().diff(item.DATAINICIO, 'milliseconds')}
+                                        maximumValue={moment(item.DATAFINAL).diff(item.DATAINICIO, 'milliseconds')}
                                         minimumTrackTintColor={Styles.colorDarker}
                                         maximumTrackTintColor="#000000"
                                     />
-                                    <Text style={{ alignSelf: 'center', color: '#818181', fontSize: 14, fontWeight: '500', letterSpacing: 1.3 }}>{moment().format('DD/MM/YYYY')}</Text>
+                                    <Text style={{ textAlign: 'center', alignSelf: 'center', color: '#818181', fontSize: 14, fontWeight: '500', letterSpacing: 1.3 }}>
+                                        {moment().format('DD/MM/YYYY') + '\n' + moment().format('HH:mm')}
+                                    </Text>
                                 </View>
                                 <View>
-                                    <Text style={{ alignSelf: 'center', color: '#818181', fontSize: 13, fontWeight: '500', letterSpacing: 1.3 }}>{moment(item.DATAFINAL).format('DD/MM/YYYY')}</Text>
+                                    <Text style={{ textAlign: 'center', alignSelf: 'center', color: '#818181', fontSize: 12, fontWeight: '500', letterSpacing: 1.3 }}>
+                                        {moment(item.DATAFINAL).format('DD/MM/YYYY') + '\n' + moment(item.DATAFINAL).format('HH:mm')}
+                                    </Text>
                                 </View>
                             </View>
 
@@ -150,7 +166,7 @@ class Remedio extends Component {
                     <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1.7, y: 0 }}
                         colors={['#890101', 'red']} style={{ alignSelf: 'center', width: '50%', height: 50 }}>
                         <Button bordered style={{ elevation: 0, flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center' }}
-                            onPress={() => this.onClickDelete(item.COMPARTIMENTO)}>
+                            onPress={() => this.onClickDelete(item.COMPARTIMENTO, item.DESCRICAO)}>
                             <Text style={{ color: '#FFF', fontSize: 13, fontWeight: '500', letterSpacing: 1.3, lineHeight: 16 }}>DELETAR</Text>
                         </Button>
                     </LinearGradient>
@@ -166,29 +182,6 @@ class Remedio extends Component {
         );
     }
 }
-const styles = StyleSheet.create({
-    input: {
-        height: 42,
-        borderWidth: 1,
-        borderColor: '#41444c',
-        color: '#333333',
-        backgroundColor: '#FFF',
-        marginTop: 14,
-        elevation: 2,
-        borderRadius: 5
-    },
-    texto: {
-        color: '#888888',
-        fontSize: 13,
-        fontWeight: '400',
-    },
-    title: {
-        color: '#000',
-        fontWeight: '400',
-        fontSize: 15,
-        marginTop: 8
-    }
-});
 
 const mapStateToProps = (state) => {
     const config = state.config;
@@ -198,6 +191,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => ({
     onDelete: (compartimento) => dispatch(deleteRemedio(compartimento)),
+    onSave: (item) => dispatch(saveRemedio(item)),
 });
 
 const RemedioPage = connect(

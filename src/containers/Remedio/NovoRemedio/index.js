@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, ScrollView, Image, AsyncStorage, Animated } from 'react-native';
+import { Text, View, ScrollView, Image } from 'react-native';
 import { Button, Container, Header } from 'native-base';
 import { connect } from 'react-redux';
 import Toast from 'react-native-simple-toast';
@@ -20,30 +20,33 @@ class NovoRemedio extends Component {
         const { compartimento } = this.props.location.state;
         if (textoNome !== '' && textoHoras !== '' && textoQuantidade !== '' && textoTratamento !== '' && textoQuantDose !== '') {
             if (moment.duration(textoHoras + ':00') > moment.duration(textoHorasfalta + ':00')) {
-                const timeHoras = moment.duration(textoHoras + ':00');
-                const timeHorasFalta = moment.duration(textoHorasfalta + ':00');
-                const datetimeInicio = moment().subtract(timeHoras).add(timeHorasFalta);
-                const timeHorasFinal = moment.duration(textoHoras + ':00') * (textoQuantidade / textoQuantDose);
-                const datetimeFinal = moment(datetimeInicio).add(timeHorasFinal);
-                const listaHistorico = this.calculaHistorico(datetimeInicio, textoHoras + ':00', textoQuantidade / textoQuantDose);
-                const remedio = {
-                    IDREMEDIO: Math.random() * 10,
-                    DESCRICAO: textoNome,
-                    NOMETRATAMENTO: textoTratamento,
-                    COMPARTIMENTO: compartimento,
-                    TEMPODOSE: textoHoras,
-                    STATUS: 'A',
-                    QUANTIDADE: textoQuantidade,
-                    QUANTIDADEDOSE: textoQuantDose,
-                    DATAINICIO: datetimeInicio,
-                    DATAFINAL: datetimeFinal,
-                    HISTORICO: listaHistorico
-                };
-                let lista = await AsyncStorage.getItem('listaRemedio')
-                onNovoRemedio(remedio, JSON.parse(lista));
-                history.goBack();
+                if (parseInt(textoQuantDose) > 0 && parseInt(textoQuantDose) <= parseInt(textoQuantidade)) {
+                    const timeHoras = moment.duration(textoHoras + ':00');
+                    const timeHorasFalta = moment.duration(textoHorasfalta + ':00');
+                    const datetimeInicio = moment().subtract(timeHoras).add(timeHorasFalta);
+                    const timeHorasFinal = moment.duration(textoHoras + ':00') * (textoQuantidade / textoQuantDose);
+                    const datetimeFinal = moment(datetimeInicio).add(timeHorasFinal);
+                    const listaHistorico = this.calculaHistorico(datetimeInicio, textoHoras + ':00', textoQuantidade / textoQuantDose);
+                    const remedio = {
+                        IDREMEDIO: Math.random() * 10,
+                        DESCRICAO: textoNome,
+                        NOMETRATAMENTO: textoTratamento,
+                        COMPARTIMENTO: compartimento,
+                        TEMPODOSE: textoHoras,
+                        STATUS: 'A',
+                        QUANTIDADE: textoQuantidade,
+                        QUANTIDADEDOSE: textoQuantDose,
+                        DATAINICIO: datetimeInicio,
+                        DATAFINAL: datetimeFinal,
+                        HISTORICO: listaHistorico
+                    };
+                    onNovoRemedio(remedio);
+                    history.goBack();
+                } else {
+                    Toast.show('Quantidade por dose invalida!');
+                }
             } else {
-                Toast.show('Tempo de cada dose é menor que o tempo da próxima dose,\nfavor digitar as horas corretas.');
+                Toast.show('Tempo de cada dose é menor que o tempo da próxima dose,\nfavor digitar as horas corretas!');
             }
         } else {
             Toast.show('Por favor preencher os campos!');
@@ -90,7 +93,7 @@ class NovoRemedio extends Component {
                         <Icon name={'numeric-' + compartimento + '-box'} color='#FFF' size={30} style={{ position: 'absolute', right: 10 }} />
                     </View>
                 </Header>
-                <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={{ flexGrow: 1, backgroundColor: Styles.backgroundList }} >
+                <ScrollView keyboardShouldPersistTaps='handled' showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, backgroundColor: Styles.backgroundList }} >
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginVertical: 20 }}>
                         <View style={{ width: '80%' }}>
                             <View style={{ marginTop: 10, paddingBottom: 10 }}>
@@ -102,11 +105,11 @@ class NovoRemedio extends Component {
                                     inputFocus={this.inputQuantidade} value={textoTratamento} onChangeText={(texto) => this.setState({ textoTratamento: texto })} />
                             </View>
                             <View style={{ marginTop: 30, paddingBottom: 10 }}>
-                                <Dissertativo titulo='Quantidade' type='inteiro' mask='[000]' inputStyle={{ width: '30%' }} refer={(e) => this.inputQuantidade = e}
+                                <Dissertativo titulo='Quantidade' type='inteiro' maxLength={3} inputStyle={{ width: '30%' }} refer={(e) => this.inputQuantidade = e}
                                     inputFocus={this.inputQuantDose} value={textoQuantidade} onChangeText={(texto) => this.setState({ textoQuantidade: texto })} />
                             </View>
                             <View style={{ marginTop: 30, paddingBottom: 10 }}>
-                                <Dissertativo titulo='Quantidade tomada por dose' type='inteiro' mask='[0]' inputStyle={{ width: '30%' }} refer={(e) => this.inputQuantDose = e}
+                                <Dissertativo titulo='Quantidade tomada por dose' type='inteiro' maxLength={1} inputStyle={{ width: '30%' }} refer={(e) => this.inputQuantDose = e}
                                     inputFocus={this.inputHoras} value={textoQuantDose} onChangeText={(texto) => this.setState({ textoQuantDose: texto })} />
                             </View>
                             <View style={{ marginTop: 30, paddingBottom: 10 }}>
@@ -140,7 +143,7 @@ const mapStateToProps = (state) => {
     };
 };
 const mapDispatchToProps = (dispatch) => ({
-    onNovoRemedio: (remedio, lista) => dispatch(novoRemedio(remedio, lista)),
+    onNovoRemedio: (remedio) => dispatch(novoRemedio(remedio)),
 });
 
 const NovoRemedioPage = connect(

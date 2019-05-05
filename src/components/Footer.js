@@ -4,20 +4,22 @@ import { Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Foundation'
 import Styles from '../theme/variables/styles';
 export default props => {
+
+    const { tab, onChangeTab } = props;
     return (
-        <Footer style={{ backgroundColor: 'transparent' }}>
+        <Footer style={{ backgroundColor: '#FFF' }}>
             <FooterTab>
-                <Button vertical active>
-                    <Icon name='home' size={25} color={Styles.colorPrimary} />
-                    <Text style={{ color: Styles.colorPrimary }}>Home</Text>
+                <Button vertical onPress={() => onChangeTab(0)}>
+                    <Icon name='home' size={25} color={tab === 0 ? Styles.colorPrimary : null} />
+                    <Text style={{ color: tab === 0 ? Styles.colorPrimary : null }}>Home</Text>
                 </Button>
-                <Button vertical>
-                    <Icon name='graph-trend' size={25} />
-                    <Text>Graficos</Text>
+                <Button vertical onPress={() => onChangeTab(1)}>
+                    <Icon name='graph-trend' size={25} color={tab === 1 ? Styles.colorPrimary : null} />
+                    <Text style={{ color: tab === 1 ? Styles.colorPrimary : null }}>Graficos</Text>
                 </Button >
-                <Button vertical>
-                    <Icon name='calendar' size={25} />
-                    <Text>Calendario</Text>
+                <Button vertical onPress={() => onChangeTab(2)}>
+                    <Icon name='calendar' size={25} color={tab === 2 ? Styles.colorPrimary : null} />
+                    <Text style={{ color: tab === 2 ? Styles.colorPrimary : null }}>Calendario</Text>
                 </Button>
             </FooterTab>
         </Footer>

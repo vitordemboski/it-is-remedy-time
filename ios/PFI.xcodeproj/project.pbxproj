@@ -61,7 +61,6 @@
 		8CE3674614104123897D93C3 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD28C4F6E9243F58358385F /* libRNVectorIcons.a */; };
 		FF41BFF3A01E4B06A3A0DBBD /* libRNVectorIcons-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 48A30526089941ECA0596B27 /* libRNVectorIcons-tvOS.a */; };
 		41BC1EF7BFB046D0BE0A0009 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D97783C184F41A8B1739D23 /* libBVLinearGradient.a */; };
-		B29D3B79864F453EAF8ADBC7 /* libRNTextInputMask.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C347C35E056D494AA7379296 /* libRNTextInputMask.a */; };
 		C81C744058EC4D95B2CBB8F9 /* libRNCSlider.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A0F7A13AF2649E8915D63AB /* libRNCSlider.a */; };
 /* End PBXBuildFile section */
 
@@ -395,8 +394,6 @@
 		48A30526089941ECA0596B27 /* libRNVectorIcons-tvOS.a */ = {isa = PBXFileReference; name = "libRNVectorIcons-tvOS.a"; path = "libRNVectorIcons-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		6097A14F595D4AEEADC0A53A /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; name = "BVLinearGradient.xcodeproj"; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		3D97783C184F41A8B1739D23 /* libBVLinearGradient.a */ = {isa = PBXFileReference; name = "libBVLinearGradient.a"; path = "libBVLinearGradient.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		290431EF66AD4CAB86BFFEF3 /* RNTextInputMask.xcodeproj */ = {isa = PBXFileReference; name = "RNTextInputMask.xcodeproj"; path = "../node_modules/react-native-text-input-mask/ios/RNTextInputMask/RNTextInputMask.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		C347C35E056D494AA7379296 /* libRNTextInputMask.a */ = {isa = PBXFileReference; name = "libRNTextInputMask.a"; path = "libRNTextInputMask.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		D023B6F7001B459A84E2A72B /* RNCSlider.xcodeproj */ = {isa = PBXFileReference; name = "RNCSlider.xcodeproj"; path = "../node_modules/@react-native-community/slider/ios/RNCSlider.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		5A0F7A13AF2649E8915D63AB /* libRNCSlider.a */ = {isa = PBXFileReference; name = "libRNCSlider.a"; path = "libRNCSlider.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
@@ -430,7 +427,6 @@
 				A783ED249495416B98FBB13C /* libLRDRCTSimpleToast.a in Frameworks */,
 				8CE3674614104123897D93C3 /* libRNVectorIcons.a in Frameworks */,
 				41BC1EF7BFB046D0BE0A0009 /* libBVLinearGradient.a in Frameworks */,
-				B29D3B79864F453EAF8ADBC7 /* libRNTextInputMask.a in Frameworks */,
 				C81C744058EC4D95B2CBB8F9 /* libRNCSlider.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -625,7 +621,6 @@
 				2397D9641D014DBC9AF1371F /* LRDRCTSimpleToast.xcodeproj */,
 				1CAE06C55DCA4230A136C15F /* RNVectorIcons.xcodeproj */,
 				6097A14F595D4AEEADC0A53A /* BVLinearGradient.xcodeproj */,
-				290431EF66AD4CAB86BFFEF3 /* RNTextInputMask.xcodeproj */,
 				D023B6F7001B459A84E2A72B /* RNCSlider.xcodeproj */,
 			);
 			name = Libraries;
@@ -1299,16 +1294,12 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PFI.app/PFI";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-simple-toast\ios\LRDRCTSimpleToast",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
-					"$(SRCROOT)\..\node_modules\react-native-text-input-mask\ios\RNTextInputMask\RNTextInputMask/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\slider\ios",
 				);
 			};
@@ -1331,16 +1322,12 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PFI.app/PFI";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-simple-toast\ios\LRDRCTSimpleToast",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
-					"$(SRCROOT)\..\node_modules\react-native-text-input-mask\ios\RNTextInputMask\RNTextInputMask/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\slider\ios",
 				);
 			};
@@ -1367,7 +1354,6 @@
 					"$(SRCROOT)\..\node_modules\react-native-simple-toast\ios\LRDRCTSimpleToast",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
-					"$(SRCROOT)\..\node_modules\react-native-text-input-mask\ios\RNTextInputMask\RNTextInputMask/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\slider\ios",
 				);
 			};
@@ -1393,7 +1379,6 @@
 					"$(SRCROOT)\..\node_modules\react-native-simple-toast\ios\LRDRCTSimpleToast",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
-					"$(SRCROOT)\..\node_modules\react-native-text-input-mask\ios\RNTextInputMask\RNTextInputMask/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\slider\ios",
 				);
 			};
@@ -1424,16 +1409,12 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-simple-toast\ios\LRDRCTSimpleToast",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
-					"$(SRCROOT)\..\node_modules\react-native-text-input-mask\ios\RNTextInputMask\RNTextInputMask/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\slider\ios",
 				);
 			};
@@ -1464,16 +1445,12 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-simple-toast\ios\LRDRCTSimpleToast",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
-					"$(SRCROOT)\..\node_modules\react-native-text-input-mask\ios\RNTextInputMask\RNTextInputMask/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\slider\ios",
 				);
 			};
@@ -1503,16 +1480,12 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-simple-toast\ios\LRDRCTSimpleToast",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
-					"$(SRCROOT)\..\node_modules\react-native-text-input-mask\ios\RNTextInputMask\RNTextInputMask/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\slider\ios",
 				);
 			};
@@ -1542,16 +1515,12 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-simple-toast\ios\LRDRCTSimpleToast",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
-					"$(SRCROOT)\..\node_modules\react-native-text-input-mask\ios\RNTextInputMask\RNTextInputMask/**",
 					"$(SRCROOT)\..\node_modules\@react-native-community\slider\ios",
 				);
 			};

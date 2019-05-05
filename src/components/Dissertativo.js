@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { TextInput, Animated, View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { focusInput } from './FocusTextInput';
-import TextInputMask from 'react-native-text-input-mask';
 import DatePicker from 'react-native-datepicker';
 
 export default class Dissertativo extends Component {
@@ -34,7 +33,7 @@ export default class Dissertativo extends Component {
 
     render() {
 
-        const { onChangeText, type, refer, inputFocus, value, titulo, inputStyle, mask, done } = this.props;
+        const { onChangeText, type, refer, inputFocus, value, titulo, inputStyle, maxLength, done } = this.props;
         const { scaleAnim, focus } = this.state;
         const time = type === 'time';
         const inteiro = type === 'inteiro';
@@ -56,16 +55,16 @@ export default class Dissertativo extends Component {
                 onDateChange={(texto) => { onChangeText(texto); this.onBlurInput() }}
             />)
         } else if (inteiro) {
-            input = (<TextInputMask
-                mask={mask}
+            input = (<TextInput
                 keyboardType='numeric'
                 returnKeyType={done ? 'done' : 'next'}
                 onFocus={() => this.onFocusInput()}
                 onBlur={() => this.onBlurInput()}
                 onSubmitEditing={() => focusInput(inputFocus)}
+                maxLength={maxLength}
                 ref={refer}
                 value={value}
-                onChangeText={(texto) => onChangeText(texto)}
+                onChangeText={(texto) => onChangeText(texto.replace(/[^0-9]/g,''))}
                 style={{ flex: 1 }}
             />)
         } else {

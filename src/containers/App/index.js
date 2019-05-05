@@ -7,7 +7,7 @@ import {
 import { connect } from 'react-redux';
 import { Container, Header, Right, Body, View, Thumbnail } from 'native-base';
 import {
-  enviaMensagem, finalizarRemedio
+  finalizarRemedio
 } from './actions';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Styles from '../../theme/variables/styles';
@@ -34,16 +34,20 @@ class App extends Component {
 
   state = {
     refreshing: false,
-    menuIsOpen: false
+    menuIsOpen: false,
+    tab: 0
   }
 
   onClickVisualizar = (item) => {
     this.props.history.push('/remedio', { item })
   }
+  onChangeTab = (tab) => {
+    this.setState({ tab });
+  }
 
   render() {
     const { history, url, listaRemedio, onFinalizarRemedio } = this.props;
-    const { menuIsOpen } = this.state;
+    const { menuIsOpen, tab } = this.state;
     return (
       <SideMenu menuPosition='right' isOpen={menuIsOpen} onChange={(isOpen) => this.setState({ menuIsOpen: isOpen })}
         menu={menuIsOpen ? (<SideBar history={history} url={url} menuIsOpen={menuIsOpen}
@@ -104,7 +108,7 @@ class App extends Component {
             </ScrollView>
           </Container>
           <Separador />
-          <Footer />
+          <Footer tab={tab} onChangeTab={(tab) => this.onChangeTab(tab)} />
         </Container>
       </SideMenu>
     );

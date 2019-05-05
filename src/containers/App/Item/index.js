@@ -6,7 +6,6 @@ import moment from 'moment';
 import 'moment/locale/pt-br';
 import Icone from '../../../../assets/icones/medicamento.png';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
 export default class Item extends Component {
 
   ontem = () => {
@@ -29,7 +28,9 @@ export default class Item extends Component {
   state = {
     scale: new Animated.Value(1),
     disabled: false,
-    finalizado: this.props.item.STATUS === 'F'
+    finalizado: this.props.item.STATUS === 'F',
+    tempoRestante: '',
+    colorDarkerAnimated: new Animated.Value(0),
   }
 
   getTimeAgo = (date) => {
@@ -54,53 +55,118 @@ export default class Item extends Component {
       return this.getTimeAgo(dataDose)
     }
   }
+  componentDidMount = () => {
+    const { item } = this.props;
+    if (item.COMPARTIMENTO) {
+      const tempoRestante = this.calculaTempoRestante(item.HISTORICO);
+      this.setState({ tempoRestante });
+      if (item.STATUS === 'F') {
+        this.animacaoFinalizado();
+      }
+    }
+  }
+
+  animacaoFinalizado = () => {
+    const duration = 600
+    Animated.sequence([
+      Animated.timing(this.state.colorDarkerAnimated, {
+        toValue: 1,
+        duration
+      }),
+      Animated.timing(this.state.colorDarkerAnimated, {
+        toValue: 0,
+        duration
+      }),
+    ]).start(() => this.animacaoFinalizado());
+  }
 
   render() {
     const { item, onPressNovo, onPressVisualizar } = this.props;
-    const { finalizado } = this.state;
+    const { finalizado, disabled, scale, tempoRestante, colorDarkerAnimated } = this.state;
     const itemVisualizar = item.COMPARTIMENTO;
     const onPress = itemVisualizar ? () => onPressVisualizar(item) : () => onPressNovo();
+    let ViewItem = null;
+    if (itemVisualizar && !finalizado) {
+      ViewItem = (
+        <ListItem>
+          <View style={{ alignSelf: 'flex-start', backgroundColor: Styles.colorPrimary, elevation: 2, justifyContent: 'center', borderRadius: 25, height: 50, width: 50, alignItens: 'center' }} >
+            <Image source={Icone} style={{ height: 40, width: 40, resizeMode: 'contain', marginLeft: 5 }} />
+          </View>
+          <Body style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View>
+              <Text style={{ color: "#000", fontWeight: "bold", fontSize: 12, width: '60%' }} numberOfLines={1} >
+                {item.DESCRICAO}
+              </Text>
+              <Text style={{ color: "#333333", fontSize: 12 }} numberOfLines={1}>
+                {'Tratamento de ' + item.NOMETRATAMENTO}
+              </Text>
+            </View>
+            <View >
+              <Text style={{ color: "#333333", fontSize: 11 }}>
+                Proxima dose
+              </Text>
+              <Text style={{ color: "#333333", fontSize: 11, marginTop: 2 }}>
+                {tempoRestante}
+              </Text>
+
+            </View>
+          </Body>
+        </ListItem>
+      );
+    } else if (finalizado) {
+      ViewItem = (
+        <ListItem>
+          <View style={{ alignSelf: 'flex-start', backgroundColor: Styles.colorPrimary, elevation: 2, justifyContent: 'center', borderRadius: 25, height: 50, width: 50, alignItens: 'center' }} >
+            <Image source={Icone} style={{ height: 40, width: 40, resizeMode: 'contain', marginLeft: 5 }} />
+          </View>
+          <Body style={{ flexDirection: 'row' }}>
+            <View style={{ width: '65%' }}>
+              <Text style={{ color: "#000", fontWeight: "bold", fontSize: 12, width: '60%' }} numberOfLines={1} >
+                {item.DESCRICAO}
+              </Text>
+              <Text style={{ color: "#333333", fontSize: 12 }} numberOfLines={1}>
+                {'Tratamento de ' + item.NOMETRATAMENTO}
+              </Text>
+            </View>
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ color: "#333333", fontSize: 9 }}>
+                REMEDIOS ACABARAM
+              </Text>
+            </View>
+          </Body>
+        </ListItem>
+      );
+    } else {
+      ViewItem = (
+        <ListItem>
+          <View style={{ alignSelf: 'flex-start', backgroundColor: Styles.colorPrimary, elevation: 2, justifyContent: 'center', borderRadius: 25, height: 50, width: 50, alignItens: 'center' }} >
+            <Icon name='plus' size={25} color='#FFF' style={{ marginLeft: 15 }} />
+          </View>
+        </ListItem>
+      );
+    }
+    const colorDarker = colorDarkerAnimated.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0.7, 1]
+    });
+    const spring = colorDarkerAnimated.interpolate({
+      inputRange: [0, 1],
+      outputRange: [1, 1.01]
+    });
 
     return (
-      <View style={{ padding: 10 }}>
-        <Animated.View style={{ alignSelf: 'center', width: '100%', opacity: finalizado ? 0.3 : null, borderRadius: 20, elevation: 2, backgroundColor: '#FFF', transform: [{ scale: this.state.scale }] }}>
-          <TouchableWithoutFeedback disabled={this.state.disabled} onPressIn={() => this.animateIn()} onPressOut={() => this.animateOut()} onPress={() => { onPress(); this.setState({ disabled: true }) }}>
-            <ListItem>
-              <View style={{
-                alignSelf: 'flex-start', backgroundColor: Styles.colorPrimary,
-                elevation: 2, justifyContent: 'center', borderRadius: 25,
-                height: 50, width: 50, alignItens: 'center'
-              }} >
-                {itemVisualizar ?
-                  <Image source={Icone} style={{ height: 40, width: 40, resizeMode: 'contain', marginLeft: 5 }} />
-                  : <Icon name='plus' size={25} color='#FFF' style={{ marginLeft: 15 }} />}
-              </View>
-              <Body>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 3 }}>
-                  <Text style={{ color: "#000", fontWeight: "bold", fontSize: 12, width: '60%' }} numberOfLines={1} >
-                    {itemVisualizar ? item.DESCRICAO : null}
-                  </Text>
-                  {finalizado ? <Text style={{ color: "#333333", fontSize: 10 }}>
-                    Finalizado
-                  </Text> :
-                    <Text style={{ color: "#333333", fontSize: 10 }}>
-                      {itemVisualizar ? 'Proxima dose' : null}
-                    </Text>
-                  }
-                </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Text style={{ color: "#333333", fontSize: 12 }} numberOfLines={1}>
-                    {itemVisualizar ? 'Tratamento de ' + item.NOMETRATAMENTO : null}
-                  </Text>
-                  <Text style={{ color: "#333333", fontSize: 10, marginLeft: 4 }}>
-                    {itemVisualizar ? finalizado ? '' : this.calculaTempoRestante(item.HISTORICO) : null}
-                  </Text>
-                </View>
-              </Body>
-            </ListItem>
+      <Animated.View style={{ padding: 10, transform: [{ scale }] }}>
+        {finalizado ? <View style={{ position: 'absolute', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#000', alignSelf: 'center', borderRadius: 20, elevation: 2, top: 10 }}>
+          <Animated.Text style={{ color: '#FFF', fontWeight: '500', opacity: colorDarker, transform: [{ scale: spring }] }}>
+            Remedios acabaram
+          </Animated.Text>
+        </View> : null}
+        <View style={{ alignSelf: 'center', width: '100%', borderRadius: 20, elevation: 2, backgroundColor: '#FFF', opacity: finalizado ? 0.3 : null }}>
+          <TouchableWithoutFeedback disabled={disabled} onPressIn={() => this.animateIn()} onPressOut={() => this.animateOut()} onPress={() => onPress()}>
+            {ViewItem}
           </TouchableWithoutFeedback>
-        </Animated.View>
-      </View>
+        </View>
+      </Animated.View>
     );
   }
 }

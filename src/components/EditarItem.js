@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { TextInput, Animated, View, Text, StyleSheet } from 'react-native';
+import { TextInput, Animated, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { focusInput } from './FocusTextInput';
-import TextInputMask from 'react-native-text-input-mask';
 import DatePicker from 'react-native-datepicker';
 
 export default class EditarItem extends Component {
@@ -54,19 +53,20 @@ export default class EditarItem extends Component {
                 onDateChange={(texto) => { onChangeText(texto); this.onBlurInput() }}
             />)
         } else if (inteiro) {
-            input = (<TextInputMask
-                mask={mask}
-                keyboardType='numeric'
-                returnKeyType={done ? 'done' : 'next'}
-                editable={!disabled}
-                onFocus={() => this.onFocusInput()}
-                onBlur={() => this.onBlurInput()}
-                onSubmitEditing={() => focusInput(inputFocus)}
-                ref={refer}
-                value={value}
-                onChangeText={(texto) => onChangeText(texto)}
-                style={styles.input}
-            />)
+            input = (
+                <View style={{ flexDirection: 'row',alignItems:'center' }}>
+                    <Text style={{ width: 30 }}>
+                        {value}
+                    </Text>
+                    <View style={{ height: 40 }}>
+                        <TouchableOpacity onPress={() => onChangeText(parseInt(value) + 1)}>
+                            <Icon name='keyboard-arrow-up' size={24} style={{ padding: 1 }} />
+                        </TouchableOpacity>
+                        {parseInt(value) > 1 ? <TouchableOpacity onPress={() => onChangeText(parseInt(value) - 1)}>
+                            <Icon name='keyboard-arrow-down' size={24} style={{ padding: 1 }} />
+                        </TouchableOpacity> : null}
+                    </View>
+                </View >)
         } else {
             input = (
                 <TextInput
@@ -85,7 +85,7 @@ export default class EditarItem extends Component {
 
 
         return (
-            <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+            <Animated.View style={{ transform: [{ scale: scaleAnim }], marginVertical: 8 }}>
                 <Text style={styles.title}>{titulo}</Text>
                 {input}
             </Animated.View>
@@ -97,9 +97,9 @@ const styles = StyleSheet.create({
     input: {
         height: 42,
         borderWidth: 1,
-        borderColor: '#41444c',
-        color: '#333333',
-        backgroundColor: '#FFF',
+        borderColor: '#CCC',
+        color: '#9b9999',
+        backgroundColor: '#CCC',
         marginTop: 14,
         elevation: 2,
         borderRadius: 5
@@ -110,8 +110,8 @@ const styles = StyleSheet.create({
         fontWeight: '400',
     },
     title: {
-        color: '#000',
-        fontWeight: '400',
+        color: '#9b9999',
+        fontWeight: 'bold',
         fontSize: 15,
         marginTop: 8
     }
