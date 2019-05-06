@@ -54,8 +54,8 @@ export default class EditarItem extends Component {
             />)
         } else if (inteiro) {
             input = (
-                <View style={{ flexDirection: 'row',alignItems:'center' }}>
-                    <Text style={{ width: 30 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 10 }}>
+                    <Text style={{ width: 25 }}>
                         {value}
                     </Text>
                     <View style={{ height: 40 }}>

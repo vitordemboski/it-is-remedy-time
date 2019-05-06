@@ -6,6 +6,7 @@ const initialState = Map({
   enviando: false,
   sucesso: false,
   error: false,
+  sucessoNovoRemedio: false
 });
 
 const handleEnviarMensagem = (state, action) => {
@@ -53,6 +54,7 @@ const handleLoadRemedioFailed = (state, action) => {
 const handleNovoRemedio = (state, action) => {
   return state
     .set('loading', true)
+    .set('sucessoNovoRemedio', false)
     .set('error', false);
 };
 
@@ -62,6 +64,7 @@ const handleNovoRemedioSuccess = (state, action) => {
   AsyncStorage.setItem('listaRemedio', JSON.stringify(listaRemedio));
   return state
     .set('listaRemedio', listaRemedio)
+    .set('sucessoNovoRemedio', true)
     .set('loading', false)
     .set('error', false);
 };
@@ -70,6 +73,7 @@ const handleNovoRemedioSuccess = (state, action) => {
 const handleNovoRemedioFailed = (state, action) => {
   return state
     .set('loading', false)
+    .set('sucessoNovoRemedio', false)
     .set('error', action.error);
 };
 

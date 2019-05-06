@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import {
   Image, Text,
   ScrollView, TouchableOpacity,
-  TouchableHighlight, StyleSheet
+  StyleSheet, Dimensions
 } from 'react-native';
 import { connect } from 'react-redux';
-import { Container, Header, Right, Body, View, Thumbnail } from 'native-base';
+import { Container, Header, Right, Body, View, Thumbnail, Spinner } from 'native-base';
 import {
   finalizarRemedio
 } from './actions';
@@ -17,7 +17,10 @@ import SideBar from './SideMenu';
 import Item from './Item';
 import Usuario from '../../../assets/icones/usuario.png';
 import SideMenu from 'react-native-side-menu';
-import { Separador, Footer } from '../../components';
+import { Separador, Footer, MyCarousel } from '../../components';
+import Carousel from 'react-native-snap-carousel';
+import moment from 'moment';
+import 'moment/locale/pt-br';
 
 class App extends Component {
 
@@ -35,19 +38,125 @@ class App extends Component {
   state = {
     refreshing: false,
     menuIsOpen: false,
-    tab: 0
+    tab: 0,
+    datas: []
+  }
+  compare(a, b) {
+    return new moment(a.data).format('YYYYMMDD') - new moment(b.data).format('YYYYMMDD')
+  }
+  calculaDatas = (listaRemedio) => {
+    let listaHistorico = [];
+
+    if (listaRemedio[0].HISTORICO) {
+      listaHistorico = listaHistorico.concat(listaRemedio[0].HISTORICO);
+    }
+    if (listaRemedio[1].HISTORICO) {
+      listaHistorico = listaHistorico.concat(listaRemedio[1].HISTORICO);
+    }
+    if (listaRemedio[2].HISTORICO) {
+      listaHistorico = listaHistorico.concat(listaRemedio[2].HISTORICO);
+    }
+    listaHistorico = listaHistorico.sort(this.compare);
+    let listaData = [];
+    let listaDataItem = [];
+
+    listaHistorico.forEach((item) => {
+      if (!listaData.includes(moment(item.data).format('DD/MM/YYYY'))) {
+        const data = moment(item.data).format('DD/MM/YYYY');
+        const arrayItens = []
+        listaHistorico.forEach((item2) => {
+          if (data === moment(item2.data).format('DD/MM/YYYY')) {
+            arrayItens.push(item2);
+          }
+        });
+        listaData.push(data);
+        listaDataItem.push({ data, itens: arrayItens });
+      }
+    });
+
+    this.setState({ datas: listaDataItem });
   }
 
   onClickVisualizar = (item) => {
     this.props.history.push('/remedio', { item })
   }
+  componentDidMount = () => {
+    const { listaRemedio } = this.props;
+    this.calculaDatas(listaRemedio)
+  }
+
   onChangeTab = (tab) => {
     this.setState({ tab });
   }
 
   render() {
     const { history, url, listaRemedio, onFinalizarRemedio } = this.props;
-    const { menuIsOpen, tab } = this.state;
+    const { menuIsOpen, tab, datas } = this.state;
+
+    let container = null;
+    if (tab === 0) {
+      container = (
+        <View style={{ backgroundColor: Styles.backgroundList, flex: 1 }}>
+          <View style={{ marginTop: 20 }}>
+            <Text style={styles.textoCompartimento}>
+              Compartimento 1
+              </Text>
+            <Item
+              item={listaRemedio[0]}
+              onFinalizarRemedio={onFinalizarRemedio}
+              onPressNovo={() => history.push('/novo', { compartimento: 1 })}
+              onPressVisualizar={(item) => this.onClickVisualizar(item)}
+            />
+          </View>
+          <View style={{ marginTop: 20 }}>
+            <Text style={styles.textoCompartimento}>
+              Compartimento 2
+              </Text>
+            <Item
+              item={listaRemedio[1]}
+              onFinalizarRemedio={onFinalizarRemedio}
+              onPressNovo={() => history.push('/novo', { compartimento: 2 })}
+              onPressVisualizar={(item) => this.onClickVisualizar(item)}
+            />
+          </View>
+          <View style={{ marginTop: 20 }}>
+            <Text style={styles.textoCompartimento}>
+              Compartimento 3
+              </Text>
+            <Item
+              item={listaRemedio[2]}
+              onFinalizarRemedio={onFinalizarRemedio}
+              onPressNovo={() => history.push('/novo', { compartimento: 3 })}
+              onPressVisualizar={(item) => this.onClickVisualizar(item)}
+            />
+          </View>
+        </View>
+
+      )
+    } else {
+      if (datas.length === 0) {
+        container = (
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ color: '#a3a3a3', fontWeight: 'bold', fontSize: 22, textAlign: 'center' }}>
+              {'Voce não possue\ntratamentos em andamento'}
+            </Text>
+          </View>
+        )
+      } else {
+        container = (
+          <Carousel
+            ref={(c) => this._carousel = c}
+            data={datas}
+            renderItem={MyCarousel}
+            sliderWidth={Dimensions.get('window').width}
+            itemWidth={Dimensions.get('window').width / 1.4}
+          />
+        )
+      }
+
+    }
+
+
     return (
       <SideMenu menuPosition='right' isOpen={menuIsOpen} onChange={(isOpen) => this.setState({ menuIsOpen: isOpen })}
         menu={menuIsOpen ? (<SideBar history={history} url={url} menuIsOpen={menuIsOpen}
@@ -70,41 +179,7 @@ class App extends Component {
             <ScrollView
               style={{ backgroundColor: Styles.backgroundList }}
               contentContainerStyle={{ flexGrow: 1 }} >
-              <View style={{ backgroundColor: Styles.backgroundList, flex: 1 }}>
-                <View style={{ marginTop: 20 }}>
-                  <Text style={styles.textoCompartimento}>
-                    Compartimento 1
-                  </Text>
-                  <Item
-                    item={listaRemedio[0]}
-                    onFinalizarRemedio={onFinalizarRemedio}
-                    onPressNovo={() => history.push('/novo', { compartimento: 1 })}
-                    onPressVisualizar={(item) => this.onClickVisualizar(item)}
-                  />
-                </View>
-                <View style={{ marginTop: 20 }}>
-                  <Text style={styles.textoCompartimento}>
-                    Compartimento 2
-                  </Text>
-                  <Item
-                    item={listaRemedio[1]}
-                    onFinalizarRemedio={onFinalizarRemedio}
-                    onPressNovo={() => history.push('/novo', { compartimento: 2 })}
-                    onPressVisualizar={(item) => this.onClickVisualizar(item)}
-                  />
-                </View>
-                <View style={{ marginTop: 20 }}>
-                  <Text style={styles.textoCompartimento}>
-                    Compartimento 3
-                  </Text>
-                  <Item
-                    item={listaRemedio[2]}
-                    onFinalizarRemedio={onFinalizarRemedio}
-                    onPressNovo={() => history.push('/novo', { compartimento: 3 })}
-                    onPressVisualizar={(item) => this.onClickVisualizar(item)}
-                  />
-                </View>
-              </View>
+              {container}
             </ScrollView>
           </Container>
           <Separador />

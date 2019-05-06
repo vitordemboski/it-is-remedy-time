@@ -13,10 +13,17 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Dissertativo, BackButton } from '../../../components';
 
 class NovoRemedio extends Component {
+    componentWillReceiveProps = (nextProps) => {
+        const { sucessoNovoRemedio } = nextProps;
+        const { history } = this.props;
+        if (sucessoNovoRemedio === true) {
+            history.goBack();
+        }
+    }
 
     onClickSalvar = async () => {
         const { textoNome, textoQuantidade, textoHoras, textoTratamento, textoHorasfalta, textoQuantDose } = this.state;
-        const { onNovoRemedio, history } = this.props;
+        const { onNovoRemedio } = this.props;
         const { compartimento } = this.props.location.state;
         if (textoNome !== '' && textoHoras !== '' && textoQuantidade !== '' && textoTratamento !== '' && textoQuantDose !== '') {
             if (moment.duration(textoHoras + ':00') > moment.duration(textoHorasfalta + ':00')) {
@@ -26,7 +33,7 @@ class NovoRemedio extends Component {
                     const datetimeInicio = moment().subtract(timeHoras).add(timeHorasFalta);
                     const timeHorasFinal = moment.duration(textoHoras + ':00') * (textoQuantidade / textoQuantDose);
                     const datetimeFinal = moment(datetimeInicio).add(timeHorasFinal);
-                    const listaHistorico = this.calculaHistorico(datetimeInicio, textoHoras + ':00', textoQuantidade / textoQuantDose);
+                    const listaHistorico = this.calculaHistorico(datetimeInicio, textoHoras + ':00', textoQuantidade / textoQuantDose, textoNome);
                     const remedio = {
                         IDREMEDIO: Math.random() * 10,
                         DESCRICAO: textoNome,
@@ -41,7 +48,6 @@ class NovoRemedio extends Component {
                         HISTORICO: listaHistorico
                     };
                     onNovoRemedio(remedio);
-                    history.goBack();
                 } else {
                     Toast.show('Quantidade por dose invalida!');
                 }
@@ -53,12 +59,13 @@ class NovoRemedio extends Component {
         }
     }
 
-    calculaHistorico = (DATAINICIO, TEMPOHORAS, QUANTIDADE) => {
+    calculaHistorico = (DATAINICIO, TEMPOHORAS, QUANTIDADE, DESCRICAO) => {
         const historico = [];
         for (let i = 1; i <= QUANTIDADE; i++) {
             historico.push({
                 data: moment(DATAINICIO).add(moment.duration(TEMPOHORAS) * i),
-                dose: i
+                dose: i,
+                DESCRICAO
             }
             );
         }
@@ -138,8 +145,10 @@ class NovoRemedio extends Component {
 }
 const mapStateToProps = (state) => {
     const config = state.config;
+    const app = state.app;
     return {
         url: config.get('url'),
+        sucessoNovoRemedio: app.get('sucessoNovoRemedio')
     };
 };
 const mapDispatchToProps = (dispatch) => ({

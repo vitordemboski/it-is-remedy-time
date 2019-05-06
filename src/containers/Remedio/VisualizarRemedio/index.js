@@ -56,19 +56,19 @@ class Remedio extends Component {
     onChangeText = (texto, campo) => {
         let { item, textoNome, textoQuantidade, textoTratamento, textoQuantDose } = this.state;
         if (campo === 0) {
-            textoNome = texto
+            textoNome = texto;
             this.setState({ textoNome });
         } else if (campo === 1) {
-            textoTratamento = texto
+            textoTratamento = texto;
             this.setState({ textoTratamento });
         } else if (campo === 2) {
             if (parseInt(texto) >= 0 && parseInt(texto) <= 10) {
-                textoQuantDose = texto
+                textoQuantDose = texto;
                 this.setState({ textoQuantDose });
             }
         } else if (campo === 3) {
             if (parseInt(texto) >= 0) {
-                textoQuantidade = texto
+                textoQuantidade = texto;
                 this.setState({ textoQuantidade });
             }
         }
@@ -139,6 +139,7 @@ class Remedio extends Component {
                                     </Text>
                                 </View>
                                 <View style={{ flex: 1, paddingTop: 20 }}>
+
                                     <Slider
                                         style={{ width: '100%' }}
                                         minimumValue={0}
@@ -146,8 +147,7 @@ class Remedio extends Component {
                                         value={moment().diff(item.DATAINICIO, 'milliseconds')}
                                         maximumValue={moment(item.DATAFINAL).diff(item.DATAINICIO, 'milliseconds')}
                                         minimumTrackTintColor={Styles.colorDarker}
-                                        maximumTrackTintColor="#000000"
-                                    />
+                                        maximumTrackTintColor="#000000" />
                                     <Text style={{ textAlign: 'center', alignSelf: 'center', color: '#818181', fontSize: 14, fontWeight: '500', letterSpacing: 1.3 }}>
                                         {moment().format('DD/MM/YYYY') + '\n' + moment().format('HH:mm')}
                                     </Text>
