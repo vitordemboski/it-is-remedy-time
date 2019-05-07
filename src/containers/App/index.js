@@ -39,10 +39,18 @@ class App extends Component {
     refreshing: false,
     menuIsOpen: false,
     tab: 0,
-    datas: []
+    datas: [],
+    indiceMes: 0
   }
   compare(a, b) {
-    return new moment(a.data).format('YYYYMMDD') - new moment(b.data).format('YYYYMMDD')
+    if (moment(a.data).isBefore(b.data)) {
+      return -1;
+    }
+    if (moment(a.data).isAfter(b.data)) {
+      return 1;
+    }
+    // a deve ser igual a b
+    return 0;
   }
   calculaDatas = (listaRemedio) => {
     let listaHistorico = [];
@@ -56,23 +64,25 @@ class App extends Component {
     if (listaRemedio[2].HISTORICO) {
       listaHistorico = listaHistorico.concat(listaRemedio[2].HISTORICO);
     }
-    listaHistorico = listaHistorico.sort(this.compare);
     let listaData = [];
     let listaDataItem = [];
 
     listaHistorico.forEach((item) => {
       if (!listaData.includes(moment(item.data).format('DD/MM/YYYY'))) {
         const data = moment(item.data).format('DD/MM/YYYY');
-        const arrayItens = []
+        let arrayItens = []
         listaHistorico.forEach((item2) => {
           if (data === moment(item2.data).format('DD/MM/YYYY')) {
             arrayItens.push(item2);
           }
         });
         listaData.push(data);
+        arrayItens = arrayItens.sort(this.compare);
+        console.log(arrayItens);
         listaDataItem.push({ data, itens: arrayItens });
       }
     });
+    console.log(listaDataItem)
 
     this.setState({ datas: listaDataItem });
   }
@@ -88,10 +98,11 @@ class App extends Component {
   onChangeTab = (tab) => {
     this.setState({ tab });
   }
+  meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
 
   render() {
     const { history, url, listaRemedio, onFinalizarRemedio } = this.props;
-    const { menuIsOpen, tab, datas } = this.state;
+    const { menuIsOpen, tab, datas, indiceMes } = this.state;
 
     let container = null;
     if (tab === 0) {
@@ -144,13 +155,27 @@ class App extends Component {
         )
       } else {
         container = (
-          <Carousel
-            ref={(c) => this._carousel = c}
-            data={datas}
-            renderItem={MyCarousel}
-            sliderWidth={Dimensions.get('window').width}
-            itemWidth={Dimensions.get('window').width / 1.4}
-          />
+          <View style={{ backgroundColor: Styles.backgroundList, flex: 1 }}>
+            <Carousel
+              ref={(c) => this._carousel = c}
+              data={datas}
+              renderItem={MyCarousel}
+              sliderWidth={Dimensions.get('window').width}
+              itemWidth={Dimensions.get('window').width / 1.4}
+
+            />
+            <View style={{ flexDirection: 'row', alignSelf: 'center', alignItems: 'center', justifyContent: 'center', marginBottom: '5%' }}>
+              {indiceMes === 0 ? null : < TouchableOpacity onPress={() => this.setState({ indiceMes: indiceMes - 1 })}>
+                <Icon name='chevron-left' size={20} />
+              </TouchableOpacity>}
+              <Text style={{ fontSize: 20, color: Styles.colorPrimary, width: '30%', textAlign: 'center', fontWeight: '500' }}>
+                {this.meses[indiceMes]}
+              </Text>
+              {indiceMes === this.meses.length - 1 ? null : <TouchableOpacity onPress={() => this.setState({ indiceMes: indiceMes + 1 })}>
+                <Icon name='chevron-right' size={20} />
+              </TouchableOpacity>}
+            </View>
+          </View >
         )
       }
 
@@ -159,8 +184,8 @@ class App extends Component {
 
     return (
       <SideMenu menuPosition='right' isOpen={menuIsOpen} onChange={(isOpen) => this.setState({ menuIsOpen: isOpen })}
-        menu={menuIsOpen ? (<SideBar history={history} url={url} menuIsOpen={menuIsOpen}
-          closeMenu={() => this.setState({ menuIsOpen: false })} />) : null}>
+        menu={<SideBar history={history} url={url} menuIsOpen={menuIsOpen}
+          closeMenu={() => this.setState({ menuIsOpen: false })} />}>
         <Container>
           <Header hasTabs noShadow style={{ backgroundColor: Styles.colorPrimary }}>
             <Body style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>

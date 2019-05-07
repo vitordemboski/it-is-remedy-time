@@ -22,15 +22,21 @@ export default ({ item, index }) => {
                         <Text>Hora</Text>
                     </View>
                     {item.itens.map(element => {
+                        const dataAtual = moment();
+                        let antes = false
+                        if (dataAtual.isAfter(element.data)) {
+                            antes = true;
+                        }
                         return (
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <Text style={{ fontWeight: 'bold' }}>
+                            <View key={element.data} style={{ flexDirection: 'row', marginVertical: 3, opacity: antes ? 0.5 : null }}>
+                                {antes ? <View style={{ position: 'absolute', width: '100%', borderBottomWidth: 1, top: 10, opacity: 0.8 }} /> : null}
+                                <Text style={{ fontWeight: 'bold', flex: 3, marginLeft: 2 }}>
                                     {element.DESCRICAO}
                                 </Text>
-                                <Text style={{ fontWeight: 'bold' }}>
+                                <Text style={{ fontWeight: 'bold', flex: 1, textAlign: 'right', marginRight: 2 }}>
                                     {element.dose}
                                 </Text>
-                                <Text style={{ fontWeight: 'bold' }}>
+                                <Text style={{ fontWeight: 'bold', flex: 3, textAlign: 'right' }}>
                                     {moment(element.data).format('HH:mm')}
                                 </Text>
                             </View>

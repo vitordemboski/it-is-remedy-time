@@ -26,7 +26,7 @@ class NovoRemedio extends Component {
         const { onNovoRemedio } = this.props;
         const { compartimento } = this.props.location.state;
         if (textoNome !== '' && textoHoras !== '' && textoQuantidade !== '' && textoTratamento !== '' && textoQuantDose !== '') {
-            if (moment.duration(textoHoras + ':00') > moment.duration(textoHorasfalta + ':00')) {
+            if (moment.duration(textoHoras + ':00') >= moment.duration(textoHorasfalta + ':00')) {
                 if (parseInt(textoQuantDose) > 0 && parseInt(textoQuantDose) <= parseInt(textoQuantidade)) {
                     const timeHoras = moment.duration(textoHoras + ':00');
                     const timeHorasFalta = moment.duration(textoHorasfalta + ':00');
