@@ -12,17 +12,10 @@ import Config from './containers/Config';
 import Splash from './containers/Splash';
 import NovoRemedio from './containers/Remedio/NovoRemedio';
 import Remedio from './containers/Remedio/VisualizarRemedio';
-import NotifService from './PushConfig';
+
 export default class Main extends Component {
 
-  constructor(props) {
-    super(props);
-    this.notif = new NotifService(this.onNotif.bind(this));
-  }
 
-  onNotif(notif) {
-    console.log(notif);
-  }
 
   render() {
     return (

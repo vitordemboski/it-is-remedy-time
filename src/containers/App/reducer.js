@@ -6,7 +6,8 @@ const initialState = Map({
   enviando: false,
   sucesso: false,
   error: false,
-  sucessoNovoRemedio: false
+  sucessoNovoRemedio: false,
+  sucessoAltera: false
 });
 
 const handleEnviarMensagem = (state, action) => {
@@ -28,6 +29,25 @@ const handleEnviarMensagemFailed = (state, action) => {
     .set('enviando', false)
     .set('sucesso', false)
     .set('error', action.error);
+};
+
+const handleAlterarRemedioFailed = (state, action) => {
+  return state
+    .set('sucessoAltera', false)
+    .set('error', action.error);
+};
+
+const handleAlterarRemedio = (state, action) => {
+  return state
+    .set('sucessoAltera', false)
+    .set('error', false);
+};
+
+const handleAlterarRemedioSuccess = (state, action) => {
+  return state
+    .set('listaRemedio', action.lista)
+    .set('sucessoAltera', true)
+    .set('error', false);
 };
 
 const handleLoadRemedio = (state, action) => {
@@ -152,6 +172,12 @@ const reducer = (state = initialState, action) => {
       return handleNovoRemedioSuccess(state, action);
     case 'NOVO_REMEDIO_FAILED':
       return handleNovoRemedioFailed(state, action);
+    case 'ALTERAR_REMEDIO':
+      return handleAlterarRemedio(state, action);
+    case 'ALTERAR_REMEDIO_SUCCESS':
+      return handleAlterarRemedioSuccess(state, action);
+    case 'ALTERAR_REMEDIO_FAILED':
+      return handleAlterarRemedioFailed(state, action);
     case 'DELETE_REMEDIO':
       return handleDeleteRemedio(state, action);
     case 'DELETE_REMEDIO_SUCCESS':

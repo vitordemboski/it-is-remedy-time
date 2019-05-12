@@ -11,6 +11,8 @@ export async function API_URL() {
             url = Endereco + ':' + Porta;
         } else if (Endereco !== null) {
             url = Endereco;
+        } else {
+            url = 'http://192.168.0.100:8081';
         }
         return url;
     } catch (error) {

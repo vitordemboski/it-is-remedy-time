@@ -7,9 +7,27 @@ import { API_URL } from '../../sdk/constants';
 import { loadUrl } from '../Config/actions';
 import logoSatc from '../../../assets/logo/logoSatcCinza.png';
 import satc from '../../../assets/satc/satc.png';
-import { loadRemedio } from '../App/actions';
+import { loadRemedio, enviaMensagem } from '../App/actions';
+import NotifService from '../../PushConfig';
 
 class Splash extends Component {
+
+  constructor(props) {
+    super(props);
+    this.notif = new NotifService(this.onRegis.bind(this), this.onNotif.bind(this));
+  }
+
+  onRegis = (token) => {
+    console.log(token);
+  }
+
+  onNotif(notif) {
+    const { onEnviaMensagem } = this.props;
+    onEnviaMensagem(notif.data.compartimento);
+    console.log(notif);
+    console.log('mensagem', notif.data.compartimento);
+  }
+
   state = {
     page: '/',
     timer: false,
@@ -23,7 +41,7 @@ class Splash extends Component {
     const { onLoadUrl, onLoadRemedio } = this.props;
     const lista = await AsyncStorage.getItem('listaRemedio');
     if (lista === null) {
-     AsyncStorage.setItem('listaRemedio', JSON.stringify([{}, {}, {}]));
+      AsyncStorage.setItem('listaRemedio', JSON.stringify([{}, {}, {}]));
     } else {
       onLoadRemedio(JSON.parse(lista));
     }
@@ -69,6 +87,7 @@ class Splash extends Component {
 const mapDispatchToProps = (dispatch) => ({
   onLoadUrl: (url) => dispatch(loadUrl(url)),
   onLoadRemedio: (listaRemedio) => dispatch(loadRemedio(listaRemedio)),
+  onEnviaMensagem: (compartimento) => dispatch(enviaMensagem(compartimento))
 });
 
 const SplashPage = connect(

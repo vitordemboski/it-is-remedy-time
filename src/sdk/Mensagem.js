@@ -1,28 +1,9 @@
 import { post } from './api';
-import { connect } from 'react-redux';
+import { API_URL } from './constants'
 
-const Mensagem = props => {
-    const enviaMensagem = (msg) => {
-        return post(props.url, { msg });
-    };
-
-    const arrayMensagem = {
-        enviaMensagem,
-    }
-
-    return arrayMensagem;
-}
-
-const mapStateToProps = (state) => {
-    const config = state.config
-    return {
-        url: config.get('url'),
-    };
+export const enviaMensagem = async (compartimento) => {
+    return post(await API_URL(), { compartimento });
 };
 
-const ConfigPage = connect(
-    mapStateToProps,
-    null,
-)(Mensagem);
 
-export default ConfigPage;
+

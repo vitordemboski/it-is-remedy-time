@@ -22,27 +22,28 @@ class NovoRemedio extends Component {
         }
     }
     ativarNotificacoes = (remedio) => {
-
         remedio.HISTORICO.forEach(item => {
             const alarmNotifData = {
                 ongoing: false, // (optional) set whether this is an "ongoing" notification
                 id: item.idhistorico.toString(),
                 userInfo: { id: item.idhistorico.toString() },
-                data: {},
+                data: { compartimento: item.COMPARTIMENTO },
                 title: "Remedio",               // Required
                 message: "Está na hora de tomar sua " + item.dose + "º dose do(a) " + item.DESCRICAO,           // Required
-                auto_cancel: true,                            // default: true
+                auto_cancel: false,                            // default: true
                 ticker: "My Notification Ticker",
                 vibrate: true,
                 vibration: 100,                               // default: 100, no vibration if vibrate: false
                 small_icon: "ic_launcher",                    // Required
                 large_icon: "ic_launcher",
-                userInteraction: false,
+                userInteraction: true,
                 color: "green",
                 tag: 'some_tag',
+                actions: '["Abrir"]',
                 date: new Date(Date.now() + (moment(item.data).diff(moment(), 'milliseconds'))),                          // Date for firing alarm, Required for ReactNativeAN.scheduleAlarm.
             };
             PushNotification.localNotificationSchedule(alarmNotifData);
+
         })
     }
 
@@ -101,12 +102,12 @@ class NovoRemedio extends Component {
     }
 
     state = {
-        textoNome: 'teste',
-        textoQuantidade: '2',
-        textoQuantDose: '1',
-        textoHoras: '00:01',
-        textoTratamento: 'teste',
-        textoHorasfalta: '00:01',
+        textoNome: '',
+        textoQuantidade: '',
+        textoQuantDose: '',
+        textoHoras: '',
+        textoTratamento: '',
+        textoHorasfalta: '',
         compartimento: 0
     }
 

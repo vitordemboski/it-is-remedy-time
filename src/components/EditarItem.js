@@ -62,7 +62,7 @@ export default class EditarItem extends Component {
                         <TouchableOpacity onPress={() => onChangeText(parseInt(value) + 1)}>
                             <Icon name='keyboard-arrow-up' size={26} style={{ marginHorizontal: 4, marginVertical: 2 }} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => parseInt(value) > 1 ? onChangeText(parseInt(value) - 1) : {}}>
+                        <TouchableOpacity onPress={() => onChangeText(parseInt(value) - 1)}>
                             <Icon name='keyboard-arrow-down' size={26} style={{ marginHorizontal: 4, marginVertical: 2 }} />
                         </TouchableOpacity>
                     </View>

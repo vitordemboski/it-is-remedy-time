@@ -6,7 +6,7 @@ import Toast from 'react-native-simple-toast';
 import Styles from '../../../theme/variables/styles';
 import { BackButton, EditarItem } from '../../../components';
 import Icone from '../../../../assets/icones/medicamento.png';
-import { deleteRemedio } from '../../App/actions';
+import { deleteRemedio, alterarRemedio } from '../../App/actions';
 import moment from 'moment';
 import 'moment/locale/pt-br';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -29,10 +29,20 @@ class Remedio extends Component {
         textoTratamento: '',
         timer: null
     }
+    componentWillReceiveProps = (nextProps) => {
+        const { sucessoAltera } = nextProps;
+        const { history } = this.props;
+        if (sucessoAltera === true) {
+            Toast.show('Alterado com sucesso');
+            history.goBack();
+        }
+    }
+
     timer = (item) => {
         console.log('timer ligado');
         this.calculaTempoRestante(item.HISTORICO)
     }
+
     componentWillUnmount() {
         clearInterval(this.state.timer);
     }
@@ -73,12 +83,12 @@ class Remedio extends Component {
             textoTratamento = texto;
             this.setState({ textoTratamento });
         } else if (campo === 2) {
-            if (parseInt(texto) >= 0 && parseInt(texto) <= 10) {
+            if (parseInt(texto) > 0 && parseInt(texto) <= 10) {
                 textoQuantDose = texto;
                 this.setState({ textoQuantDose });
             }
         } else if (campo === 3) {
-            if (parseInt(texto) >= 0) {
+            if (parseInt(texto) > 0 && parseInt(item.QUANTIDADE) <= parseInt(texto)) {
                 textoQuantidade = texto;
                 this.setState({ textoQuantidade });
             }
@@ -112,8 +122,12 @@ class Remedio extends Component {
     }
 
     salvar = () => {
-        const { textoQuantDose, textoQuantidade } = this.state;
-
+        const { textoQuantDose, textoQuantidade, item } = this.state;
+        const { onAlterar } = this.props;
+        const diferenca = parseInt(textoQuantidade) - parseInt(item.QUANTIDADE);
+        if (diferenca != 0) {
+            onAlterar(item, diferenca, parseInt(textoQuantDose));
+        }
     }
 
     render() {
@@ -195,20 +209,22 @@ class Remedio extends Component {
                         </Button>
                     </LinearGradient>
                 </View>
-            </Container >
+            </Container>
         );
     }
 }
 
 const mapStateToProps = (state) => {
     const config = state.config;
+    const app = state.app;
     return {
         url: config.get('url'),
+        sucessoAltera: app.get('sucessoAltera')
     };
 };
 const mapDispatchToProps = (dispatch) => ({
     onDelete: (compartimento) => dispatch(deleteRemedio(compartimento)),
-    onSave: (item) => dispatch(saveRemedio(item)),
+    onAlterar: (item, Quantidade, quantidadeDose) => dispatch(alterarRemedio(item, Quantidade, quantidadeDose)),
 });
 
 const RemedioPage = connect(

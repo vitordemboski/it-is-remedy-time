@@ -7,7 +7,7 @@ import 'moment/locale/pt-br';
 
 export default ({ item, index }) => {
 
-    item.itens.map(element => {
+    item.itens.forEach(element => {
         const dataAtual = moment();
         element.antes = false;
         if (dataAtual.isAfter(element.data)) {

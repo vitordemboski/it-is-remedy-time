@@ -1,4 +1,4 @@
-export const enviaMensagem = (msg) => ({ type: 'ENVIAR_MENSAGEM', msg });
+export const enviaMensagem = (compartimento) => ({ type: 'ENVIAR_MENSAGEM', compartimento });
 export const enviaMensagemSuccess = () => ({ type: 'ENVIAR_MENSAGEM_SUCCESS' });
 export const enviaMensagemFailed = () => ({ type: 'ENVIAR_MENSAGEM_FAILED' });
 
@@ -15,3 +15,7 @@ export const loadRemedioSuccess = () => ({ type: 'LOAD_REMEDIO_SUCCESS' });
 export const loadRemedioFailed = () => ({ type: 'LOAD_REMEDIO_FAILED' });
 
 export const finalizarRemedio = (item) => ({ type: 'FINALIZAR_REMEDIO', item });
+
+export const alterarRemedio = (remedio, quantidade, quantidadeDose) => ({ type: 'ALTERAR_REMEDIO', remedio, quantidade, quantidadeDose });
+export const alterarRemedioSuccess = () => ({ type: 'ALTERAR_REMEDIO_SUCCESS' });
+export const alterarRemedioFailed = () => ({ type: 'ALTERAR_REMEDIO_FAILED' });

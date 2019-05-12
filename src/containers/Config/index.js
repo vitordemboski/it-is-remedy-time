@@ -6,6 +6,7 @@ import { loadUrl } from './actions';
 import Toast from 'react-native-simple-toast';
 import Styles from '../../theme/variables/styles';
 import { BackButton } from '../../components';
+import LinearGradient from 'react-native-linear-gradient';
 
 class Config extends Component {
 
@@ -21,6 +22,8 @@ class Config extends Component {
             this.setState({ textoEndereco: Endereco, textoPorta: Porta });
         } else if (Endereco !== null) {
             this.setState({ textoEndereco: Endereco });
+        } else {
+            this.setState({ textoEndereco: 'http://192.168.0.100', textoPorta: '8081' })
         }
     }
 
@@ -80,12 +83,13 @@ class Config extends Component {
 
                     </View>
                 </ScrollView>
-                <View style={{ backgroundColor: "#CCC", height: 50 }}>
-                    <Button bordered style={{ flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center' }}
-                        onPress={() => { }}>
-                        <Text style={{ color: '#FFF', fontSize: 13 }}>TESTAR CONEXÃO</Text>
+                <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1.7, y: 0 }}
+                    colors={['#0CD3B1', Styles.colorPrimary]} style={{ alignSelf: 'center', width: '100%', height: 50 }}>
+                    <Button bordered style={{ elevation: 0, flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center' }}
+                        onPress={() => this.salvar()}>
+                        <Text style={{ color: '#FFF', fontSize: 13, fontWeight: '500', letterSpacing: 1.3, lineHeight: 16 }}>SALVAR</Text>
                     </Button>
-                </View>
+                </LinearGradient>
             </Container>
         );
     }

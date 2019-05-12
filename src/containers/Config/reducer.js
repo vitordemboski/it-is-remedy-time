@@ -9,9 +9,6 @@ const handleLoadUrl = (state, action) => {
     .set('url', action.url);
 };
 
-
-
-
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'LOAD_URL':
