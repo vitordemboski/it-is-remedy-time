@@ -6,6 +6,7 @@ const colorPrimary = '#156301';
 const corItensTop = '#FFF';
 
 const colorDarker = color(colorPrimary).darken(0.2).hex();
+const colorsCompartimento = { 1: '#565656', 2: '#d7cec7', 3: '#76323f' }
 
 const styles = {
     colorDarker,
@@ -13,6 +14,7 @@ const styles = {
     tabBarUnderlineStyle,
     backgroundList,
     corItensTop,
+    colorsCompartimento
 }
 
 export default styles;

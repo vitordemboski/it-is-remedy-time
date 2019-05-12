@@ -30,7 +30,7 @@ export default class EditarItem extends Component {
 
     render() {
 
-        const { onChangeText, type, refer, inputFocus, value, titulo, inputStyle, mask, done, disabled } = this.props;
+        const { onChangeText, type, refer, inputFocus, value, titulo, done, disabled } = this.props;
         const { scaleAnim } = this.state;
         const time = type === 'time';
         const inteiro = type === 'inteiro';
@@ -58,13 +58,13 @@ export default class EditarItem extends Component {
                     <Text style={{ width: 25 }}>
                         {value}
                     </Text>
-                    <View style={{ height: 40 }}>
+                    <View>
                         <TouchableOpacity onPress={() => onChangeText(parseInt(value) + 1)}>
-                            <Icon name='keyboard-arrow-up' size={24} style={{ padding: 1 }} />
+                            <Icon name='keyboard-arrow-up' size={26} style={{ marginHorizontal: 4, marginVertical: 2 }} />
                         </TouchableOpacity>
-                        {parseInt(value) > 1 ? <TouchableOpacity onPress={() => onChangeText(parseInt(value) - 1)}>
-                            <Icon name='keyboard-arrow-down' size={24} style={{ padding: 1 }} />
-                        </TouchableOpacity> : null}
+                        <TouchableOpacity onPress={() => parseInt(value) > 1 ? onChangeText(parseInt(value) - 1) : {}}>
+                            <Icon name='keyboard-arrow-down' size={26} style={{ marginHorizontal: 4, marginVertical: 2 }} />
+                        </TouchableOpacity>
                     </View>
                 </View >)
         } else {

@@ -15,7 +15,7 @@ import Toast from 'react-native-simple-toast';
 import logoSatc from '../../../assets/logo/logoSatc.png';
 import SideBar from './SideMenu';
 import Item from './Item';
-import Usuario from '../../../assets/icones/usuario.png';
+import Usuario from '../../../assets/icones/usuario1.png';
 import SideMenu from 'react-native-side-menu';
 import { Separador, Footer, MyCarousel } from '../../components';
 import Carousel from 'react-native-snap-carousel';
@@ -40,8 +40,8 @@ class App extends Component {
     menuIsOpen: false,
     tab: 0,
     datas: [],
-    indiceMes: 0
   }
+
   compare(a, b) {
     if (moment(a.data).isBefore(b.data)) {
       return -1;
@@ -52,6 +52,7 @@ class App extends Component {
     // a deve ser igual a b
     return 0;
   }
+
   calculaDatas = (listaRemedio) => {
     let listaHistorico = [];
 
@@ -78,11 +79,9 @@ class App extends Component {
         });
         listaData.push(data);
         arrayItens = arrayItens.sort(this.compare);
-        console.log(arrayItens);
         listaDataItem.push({ data, itens: arrayItens });
       }
     });
-    console.log(listaDataItem)
 
     this.setState({ datas: listaDataItem });
   }
@@ -92,18 +91,17 @@ class App extends Component {
   }
   componentDidMount = () => {
     const { listaRemedio } = this.props;
-    this.calculaDatas(listaRemedio)
+    this.calculaDatas(listaRemedio);
+
   }
 
   onChangeTab = (tab) => {
     this.setState({ tab });
   }
-  meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
 
   render() {
     const { history, url, listaRemedio, onFinalizarRemedio } = this.props;
-    const { menuIsOpen, tab, datas, indiceMes } = this.state;
-
+    const { menuIsOpen, tab, datas } = this.state;
     let container = null;
     if (tab === 0) {
       container = (
@@ -164,16 +162,19 @@ class App extends Component {
               itemWidth={Dimensions.get('window').width / 1.4}
 
             />
-            <View style={{ flexDirection: 'row', alignSelf: 'center', alignItems: 'center', justifyContent: 'center', marginBottom: '5%' }}>
-              {indiceMes === 0 ? null : < TouchableOpacity onPress={() => this.setState({ indiceMes: indiceMes - 1 })}>
-                <Icon name='chevron-left' size={20} />
-              </TouchableOpacity>}
-              <Text style={{ fontSize: 20, color: Styles.colorPrimary, width: '30%', textAlign: 'center', fontWeight: '500' }}>
-                {this.meses[indiceMes]}
-              </Text>
-              {indiceMes === this.meses.length - 1 ? null : <TouchableOpacity onPress={() => this.setState({ indiceMes: indiceMes + 1 })}>
-                <Icon name='chevron-right' size={20} />
-              </TouchableOpacity>}
+            <View style={{ backgroundColor: '#FFF', margin: 15, justifyContent: 'center', paddingHorizontal: 10, paddingVertical: 15, width: '44%', borderRadius: 5 }}>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={{ height: 15, width: 15, backgroundColor: Styles.colorsCompartimento[1] }} />
+                <Text style={styles.textoCalCompartimento}>Compartimento 1</Text>
+              </View>
+              <View style={{ flexDirection: 'row', marginTop: 5 }}>
+                <View style={{ height: 15, width: 15, backgroundColor: Styles.colorsCompartimento[2] }} />
+                <Text style={styles.textoCalCompartimento}>Compartimento 2</Text>
+              </View>
+              <View style={{ flexDirection: 'row', marginTop: 5 }}>
+                <View style={{ height: 15, width: 15, backgroundColor: Styles.colorsCompartimento[3] }} />
+                <Text style={styles.textoCalCompartimento}>Compartimento 3</Text>
+              </View>
             </View>
           </View >
         )
@@ -193,7 +194,7 @@ class App extends Component {
             </Body>
             <Right style={{ marginTop: 6, alignItems: 'center' }}>
               <View style={{ marginLeft: 10, flexDirection: 'row' }}>
-                <Thumbnail source={Usuario} small />
+                <Thumbnail source={Usuario} small style={{ resizeMode: 'contain' }} />
               </View>
               <TouchableOpacity onPress={() => this.setState({ menuIsOpen: true })} style={{ alignItems: 'center', justifyContent: 'center', paddingTop: 3, height: 50, width: 30 }}>
                 <Icon name='navicon' size={18} color='#FFF' style={{ marginLeft: 10, opacity: 0.3 }} />
@@ -221,6 +222,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     borderBottomWidth: 0.5,
     borderColor: '#CCC'
+  },
+  textoCalCompartimento: {
+    marginHorizontal: 10,
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#969494'
   }
 })
 

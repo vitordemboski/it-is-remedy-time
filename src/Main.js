@@ -12,10 +12,18 @@ import Config from './containers/Config';
 import Splash from './containers/Splash';
 import NovoRemedio from './containers/Remedio/NovoRemedio';
 import Remedio from './containers/Remedio/VisualizarRemedio';
-
-import Stack from 'react-router-native-stack';
-
+import NotifService from './PushConfig';
 export default class Main extends Component {
+
+  constructor(props) {
+    super(props);
+    this.notif = new NotifService(this.onNotif.bind(this));
+  }
+
+  onNotif(notif) {
+    console.log(notif);
+  }
+
   render() {
     return (
       <StyleProvider style={getTheme(pfi)}>
@@ -23,12 +31,12 @@ export default class Main extends Component {
           <Root>
             <NativeRouter >
               <View style={{ flex: 1 }}>
-                  <AndroidBackButton />
-                  <Route exact path="/" component={Splash} />
-                  <Route exact path="/app" component={App} />
-                  <Route exact path="/config" component={Config} />
-                  <Route exact path="/novo" component={NovoRemedio} />
-                  <Route exact path="/remedio" component={Remedio} />
+                <AndroidBackButton />
+                <Route exact path="/" component={Splash} />
+                <Route exact path="/app" component={App} />
+                <Route exact path="/config" component={Config} />
+                <Route exact path="/novo" component={NovoRemedio} />
+                <Route exact path="/remedio" component={Remedio} />
               </View>
             </NativeRouter>
           </Root>

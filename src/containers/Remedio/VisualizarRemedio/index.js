@@ -13,6 +13,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import TimerCountdown from "react-native-timer-countdown";
 import LinearGradient from 'react-native-linear-gradient';
 import Slider from '@react-native-community/slider';
+import PushNotification from 'react-native-push-notification';
 
 class Remedio extends Component {
 
@@ -26,11 +27,20 @@ class Remedio extends Component {
         textoQuantDose: '',
         textoHoras: '',
         textoTratamento: '',
+        timer: null
+    }
+    timer = (item) => {
+        console.log('timer ligado');
+        this.calculaTempoRestante(item.HISTORICO)
+    }
+    componentWillUnmount() {
+        clearInterval(this.state.timer);
     }
 
     componentWillMount() {
         const { item } = this.props.location.state;
         this.calculaTempoRestante(item.HISTORICO);
+        this.setState({ timer: setInterval(() => this.timer(item), 5000) });
         this.setState({
             item, textoNome: item.DESCRICAO, textoQuantidade: item.QUANTIDADE,
             textoQuantDose: item.QUANTIDADEDOSE, textoHoras: item.TEMPODOSE, textoTratamento: item.NOMETRATAMENTO
@@ -53,6 +63,7 @@ class Remedio extends Component {
             this.setState({ doseTomada: historico[historico.length - 1].dose });
         }
     }
+
     onChangeText = (texto, campo) => {
         let { item, textoNome, textoQuantidade, textoTratamento, textoQuantDose } = this.state;
         if (campo === 0) {
@@ -80,7 +91,7 @@ class Remedio extends Component {
         }
     }
 
-    onClickDelete = (compartimento, Nome) => {
+    onClickDelete = (compartimento, Nome, historico) => {
         const { onDelete, history } = this.props;
         Alert.alert('Deletar Remedio', 'Realmente deseja deletar ' + Nome + '?', [
             {
@@ -91,10 +102,17 @@ class Remedio extends Component {
             {
                 text: 'OK', onPress: () => {
                     onDelete(compartimento);
+                    historico.forEach(item => {
+                        PushNotification.cancelLocalNotifications({ id: item.idhistorico.toString() });
+                    });
                     history.goBack();
                 },
             }
         ])
+    }
+
+    salvar = () => {
+        const { textoQuantDose, textoQuantidade } = this.state;
 
     }
 
@@ -120,9 +138,9 @@ class Remedio extends Component {
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-evenly' }}>
                         <View style={{ backgroundColor: '#FFF', margin: 12, padding: 15, borderRadius: 10 }}>
                             <EditarItem titulo='Nome do Remedio' refer={(e) => this.inputNome = e} inputFocus={this.inputTratamento} value={textoNome}
-                                onChangeText={(texto) => this.onChangeText(texto, 0)} />
+                                onChangeText={(texto) => this.onChangeText(texto, 0)} disabled={true} />
                             <EditarItem titulo='Nome da doença' refer={(e) => this.inputTratamento = e} inputFocus={this.inputQuantDose} value={textoTratamento}
-                                onChangeText={(texto) => this.onChangeText(texto, 1)} />
+                                onChangeText={(texto) => this.onChangeText(texto, 1)} disabled={true} />
                             <EditarItem type='inteiro' mask='[000]' titulo='Quantidade' refer={(e) => this.inputQuant = e} value={textoQuantidade}
                                 onChangeText={(texto) => this.onChangeText(texto, 3)} />
                             <EditarItem type='inteiro' mask='[0]' titulo='Quantidade por dose' refer={(e) => this.inputQuantDose = e} inputFocus={this.inputQuant} value={textoQuantDose}
@@ -139,7 +157,6 @@ class Remedio extends Component {
                                     </Text>
                                 </View>
                                 <View style={{ flex: 1, paddingTop: 20 }}>
-
                                     <Slider
                                         style={{ width: '100%' }}
                                         minimumValue={0}
@@ -166,14 +183,14 @@ class Remedio extends Component {
                     <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1.7, y: 0 }}
                         colors={['#890101', 'red']} style={{ alignSelf: 'center', width: '50%', height: 50 }}>
                         <Button bordered style={{ elevation: 0, flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center' }}
-                            onPress={() => this.onClickDelete(item.COMPARTIMENTO, item.DESCRICAO)}>
+                            onPress={() => this.onClickDelete(item.COMPARTIMENTO, item.DESCRICAO, item.HISTORICO)}>
                             <Text style={{ color: '#FFF', fontSize: 13, fontWeight: '500', letterSpacing: 1.3, lineHeight: 16 }}>DELETAR</Text>
                         </Button>
                     </LinearGradient>
                     <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1.7, y: 0 }}
                         colors={edit ? ['#0CD3B1', Styles.colorPrimary] : ['#CCC', '#CCC']} style={{ alignSelf: 'center', width: '50%', height: 50 }}>
                         <Button disabled={!edit} bordered style={{ elevation: 0, flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center' }}
-                            onPress={() => { }}>
+                            onPress={() => this.salvar()}>
                             <Text style={{ color: edit ? '#FFF' : '#848080', fontSize: 13, fontWeight: '500', letterSpacing: 1.3, lineHeight: 16 }}>SALVAR</Text>
                         </Button>
                     </LinearGradient>

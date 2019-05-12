@@ -11,6 +11,7 @@ import moment from 'moment';
 import 'moment/locale/pt-br';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Dissertativo, BackButton } from '../../../components';
+import PushNotification from 'react-native-push-notification';
 
 class NovoRemedio extends Component {
     componentWillReceiveProps = (nextProps) => {
@@ -19,6 +20,30 @@ class NovoRemedio extends Component {
         if (sucessoNovoRemedio === true) {
             history.goBack();
         }
+    }
+    ativarNotificacoes = (remedio) => {
+
+        remedio.HISTORICO.forEach(item => {
+            const alarmNotifData = {
+                ongoing: false, // (optional) set whether this is an "ongoing" notification
+                id: item.idhistorico.toString(),
+                userInfo: { id: item.idhistorico.toString() },
+                data: {},
+                title: "Remedio",               // Required
+                message: "Está na hora de tomar sua " + item.dose + "º dose do(a) " + item.DESCRICAO,           // Required
+                auto_cancel: true,                            // default: true
+                ticker: "My Notification Ticker",
+                vibrate: true,
+                vibration: 100,                               // default: 100, no vibration if vibrate: false
+                small_icon: "ic_launcher",                    // Required
+                large_icon: "ic_launcher",
+                userInteraction: false,
+                color: "green",
+                tag: 'some_tag',
+                date: new Date(Date.now() + (moment(item.data).diff(moment(), 'milliseconds'))),                          // Date for firing alarm, Required for ReactNativeAN.scheduleAlarm.
+            };
+            PushNotification.localNotificationSchedule(alarmNotifData);
+        })
     }
 
     onClickSalvar = async () => {
@@ -33,9 +58,9 @@ class NovoRemedio extends Component {
                     const datetimeInicio = moment().subtract(timeHoras).add(timeHorasFalta);
                     const timeHorasFinal = moment.duration(textoHoras + ':00') * (textoQuantidade / textoQuantDose);
                     const datetimeFinal = moment(datetimeInicio).add(timeHorasFinal);
-                    const listaHistorico = this.calculaHistorico(datetimeInicio, textoHoras + ':00', textoQuantidade / textoQuantDose, textoNome);
+                    const listaHistorico = this.calculaHistorico(datetimeInicio, textoHoras + ':00', textoQuantidade / textoQuantDose, textoNome, compartimento);
                     const remedio = {
-                        IDREMEDIO: Math.random() * 10,
+                        IDREMEDIO: Math.floor(Math.random() * 1000000),
                         DESCRICAO: textoNome,
                         NOMETRATAMENTO: textoTratamento,
                         COMPARTIMENTO: compartimento,
@@ -47,6 +72,7 @@ class NovoRemedio extends Component {
                         DATAFINAL: datetimeFinal,
                         HISTORICO: listaHistorico
                     };
+                    this.ativarNotificacoes(remedio);
                     onNovoRemedio(remedio);
                 } else {
                     Toast.show('Quantidade por dose invalida!');
@@ -59,13 +85,15 @@ class NovoRemedio extends Component {
         }
     }
 
-    calculaHistorico = (DATAINICIO, TEMPOHORAS, QUANTIDADE, DESCRICAO) => {
+    calculaHistorico = (DATAINICIO, TEMPOHORAS, QUANTIDADE, DESCRICAO, COMPARTIMENTO) => {
         const historico = [];
         for (let i = 1; i <= QUANTIDADE; i++) {
             historico.push({
                 data: moment(DATAINICIO).add(moment.duration(TEMPOHORAS) * i),
                 dose: i,
-                DESCRICAO
+                DESCRICAO,
+                COMPARTIMENTO,
+                idhistorico: Math.floor(Math.random() * 1000000)
             }
             );
         }
@@ -73,12 +101,12 @@ class NovoRemedio extends Component {
     }
 
     state = {
-        textoNome: '',
-        textoQuantidade: '',
-        textoQuantDose: '',
-        textoHoras: '',
-        textoTratamento: '',
-        textoHorasfalta: '',
+        textoNome: 'teste',
+        textoQuantidade: '2',
+        textoQuantDose: '1',
+        textoHoras: '00:01',
+        textoTratamento: 'teste',
+        textoHorasfalta: '00:01',
         compartimento: 0
     }
 
@@ -121,7 +149,7 @@ class NovoRemedio extends Component {
                             </View>
                             <View style={{ marginTop: 30, paddingBottom: 10 }}>
                                 <Dissertativo titulo='Dose a cada quantas horas' type='time'
-                                    value={textoHoras} onChangeText={(texto) => this.setState({ textoHoras: texto })} />
+                                    value={textoHoras} onChangeText={(texto) => { this.setState({ textoHoras: texto, textoHorasfalta: textoHorasfalta != '' ? textoHorasfalta : texto }) }} />
                             </View>
                             <View style={{ marginTop: 30, paddingBottom: 10 }}>
                                 <Dissertativo titulo='Tempo que falta para a proxima dose' type='time'
