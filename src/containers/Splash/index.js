@@ -6,7 +6,7 @@ import { Container, Content, Text } from 'native-base';
 import { API_URL } from '../../sdk/constants';
 import { loadUrl } from '../Config/actions';
 import logoSatc from '../../../assets/logo/logoSatcCinza.png';
-import satc from '../../../assets/satc/satc.png';
+import logoIcone from '../../../assets/logo/ic_launcher.png';
 import { loadRemedio, enviaMensagem } from '../App/actions';
 import NotifService from '../../PushConfig';
 
@@ -39,6 +39,7 @@ class Splash extends Component {
 
   componentDidMount = async () => {
     const { onLoadUrl, onLoadRemedio } = this.props;
+    setTimeout(() => (this.setState({ timer: true })), 2000);
     const lista = await AsyncStorage.getItem('listaRemedio');
     if (lista === null) {
       AsyncStorage.setItem('listaRemedio', JSON.stringify([{}, {}, {}]));
@@ -47,7 +48,6 @@ class Splash extends Component {
     }
     const url = await API_URL();
     onLoadUrl(url);
-    setTimeout(() => (this.setState({ timer: true })), 2500);
   }
 
   render() {
@@ -60,7 +60,7 @@ class Splash extends Component {
         <StatusBar hidden={true} />
         <Content contentContainerStyle={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' }}>
           <View style={{ alignItems: 'center', position: 'absolute', justifyContent: 'center' }}>
-            <Image source={satc} style={{ width: 200, height: 200, resizeMode: 'contain' }} />
+            <Image source={logoIcone} style={{ width: 200, height: 200, resizeMode: 'contain' }} />
           </View>
           <View style={{
             flex: 1, flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingBottom: 70,
