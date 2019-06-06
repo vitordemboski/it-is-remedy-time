@@ -58,24 +58,12 @@ class Splash extends Component {
       <Container>
         {redirectPage}
         <StatusBar hidden={true} />
-        <Content contentContainerStyle={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' }}>
-          <View style={{ alignItems: 'center', position: 'absolute', justifyContent: 'center' }}>
+        <Content contentContainerStyle={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFF' }}>
+          <View style={{ alignItems: 'center',  justifyContent: 'center' }}>
             <Image source={logoIcone} style={{ width: 200, height: 200, resizeMode: 'contain' }} />
           </View>
-          <View style={{
-            flex: 1, flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingBottom: 70,
-            alignItems: 'flex-end'
-          }}>
-            <View style={{
-              borderWidth: 1, borderColor: "#dcdcdc", borderRadius: 8,
-              opacity: 0.71, flexDirection: 'row', paddingLeft: 20, paddingTop: 15, paddingBottom: 15, paddingRight: 20
-            }}>
-              <Image source={logoSatc} style={{ width: 30, height: 34, marginRight: 20, resizeMode: 'contain' }} />
-              <View>
-                <Text style={{ color: "#aaaaaa", fontSize: 14, letterSpacing: 0.16 }}>Um produto</Text>
-                <Text style={{ color: "#aaaaaa", fontSize: 14, letterSpacing: 0.16 }}>Faculdade Satc</Text>
-              </View>
-            </View>
+          <View style={{ marginTop: '10%', elevation: 1 }}>
+            <Text style={{ color: '#aaaaaa', fontSize: 25, fontWeight: 'bold', letterSpacing: 1.5 }}>It's remedy time</Text>
           </View>
         </Content>
       </Container>

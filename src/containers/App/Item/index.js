@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ListItem, Left, Body, Text } from 'native-base';
-import { View, TouchableWithoutFeedback, Image, Animated } from 'react-native';
+import { View, TouchableWithoutFeedback, Image, Animated, StyleSheet } from 'react-native';
 import Styles from '../../../theme/variables/styles';
 import moment from 'moment';
 import 'moment/locale/pt-br';
@@ -81,7 +81,7 @@ export default class Item extends Component {
   }
 
   render() {
-    const { item, onPressNovo, onPressVisualizar } = this.props;
+    const { item, onPressNovo, onPressVisualizar, compartimento } = this.props;
     const { finalizado, disabled, scale, tempoRestante, colorDarkerAnimated } = this.state;
     const itemVisualizar = item.COMPARTIMENTO;
     const onPress = itemVisualizar ? () => onPressVisualizar(item) : () => onPressNovo();
@@ -92,25 +92,24 @@ export default class Item extends Component {
           <View style={{ alignSelf: 'flex-start', backgroundColor: Styles.colorPrimary, elevation: 2, justifyContent: 'center', borderRadius: 25, height: 50, width: 50, alignItens: 'center' }} >
             <Image source={Icone} style={{ height: 40, width: 40, resizeMode: 'contain', marginLeft: 5 }} />
           </View>
-          <Body style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <View>
-              <Text style={{ color: "#000", fontWeight: "bold", fontSize: 12, width: '60%' }} numberOfLines={1} >
+          <View style={{ flexDirection: 'row',justifyContent:'space-between' }}>
+            <View style={{ width: '67%', marginLeft: 10 }}>
+              <Text style={{ color: "#000", fontWeight: "bold", fontSize: 12, alignSelf: 'flex-start' }} numberOfLines={1} >
                 {item.DESCRICAO}
               </Text>
-              <Text style={{ color: "#333333", fontSize: 12 }} numberOfLines={1}>
+              <Text style={{ color: "#333333", fontSize: 12, alignSelf: 'flex-start' }} numberOfLines={1}>
                 {'Tratamento de ' + item.NOMETRATAMENTO}
               </Text>
             </View>
-            <View >
+            <View>
               <Text style={{ color: "#333333", fontSize: 11 }}>
                 Proxima dose
               </Text>
               <Text style={{ color: "#333333", fontSize: 11, marginTop: 2 }}>
                 {tempoRestante}
               </Text>
-
             </View>
-          </Body>
+          </View>
         </ListItem>
       );
     } else if (finalizado) {
@@ -153,8 +152,11 @@ export default class Item extends Component {
       inputRange: [0, 1],
       outputRange: [1, 1.01]
     });
-
     return (
+      <View style={{ marginTop: 20 }}>
+      <Text style={styles.textoCompartimento}>
+        Compartimento {compartimento}
+        </Text>
       <Animated.View style={{ padding: 10, transform: [{ scale }] }}>
         {finalizado ? <View style={{ position: 'absolute', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#000', alignSelf: 'center', borderRadius: 20, elevation: 2, top: 10 }}>
           <Animated.Text style={{ color: '#FFF', fontWeight: '500', opacity: colorDarker, transform: [{ scale: spring }] }}>
@@ -167,6 +169,16 @@ export default class Item extends Component {
           </TouchableWithoutFeedback>
         </View>
       </Animated.View>
+      </View>
     );
   }
 }
+const styles = StyleSheet.create({
+  textoCompartimento: {
+    alignSelf: 'center',
+    color: Styles.colorPrimary,
+    fontSize: 14,
+    borderBottomWidth: 0.5,
+    borderColor: '#CCC'
+  }
+});

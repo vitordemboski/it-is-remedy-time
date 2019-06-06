@@ -125,7 +125,8 @@ class Remedio extends Component {
         const { textoQuantDose, textoQuantidade, item } = this.state;
         const { onAlterar } = this.props;
         const diferenca = parseInt(textoQuantidade) - parseInt(item.QUANTIDADE);
-        if (diferenca != 0) {
+        const diferenca2 = parseInt(textoQuantDose) - parseInt(item.QUANTIDADEDOSE);
+        if (diferenca != 0 || diferenca2 != 0) {
             onAlterar(item, diferenca, parseInt(textoQuantDose));
         }
     }
@@ -138,7 +139,7 @@ class Remedio extends Component {
                     <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center' }}>
                         <BackButton />
                         <Image source={Icone} style={{ height: 40, width: 40, resizeMode: 'contain', marginRight: 5 }} />
-                        <Text style={{ fontSize: 20, color: '#FFF' }}>{item.DESCRICAO}</Text>
+                        <Text numberOfLines={1} style={{ fontSize: 20, color: '#FFF',width:'40%' }}>{item.DESCRICAO}</Text>
                         <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
                             <Icon name={'numeric-' + item.COMPARTIMENTO + '-box'} color='#FFF' size={30} />
                             <TimerCountdown

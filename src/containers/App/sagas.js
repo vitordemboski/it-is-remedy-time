@@ -60,7 +60,7 @@ function* fetchAlterarRemedio(action) {
       data = moment(ultimoRemedio.data);
     }
 
-    for (let i = 1; i <= quantidade / quantidadeDose; i++) {
+    for (let i = 1; i <= parseInt( quantidade / quantidadeDose); i++) {
       let remedioNovos = ultimoRemedio;
       remedioNovos.dose = remedioNovos.dose + i;
       remedioNovos.data = data.add(moment.duration(remedio.TEMPODOSE) * i);

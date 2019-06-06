@@ -106,39 +106,27 @@ class App extends Component {
     if (tab === 0) {
       container = (
         <View style={{ backgroundColor: Styles.backgroundList, flex: 1 }}>
-          <View style={{ marginTop: 20 }}>
-            <Text style={styles.textoCompartimento}>
-              Compartimento 1
-              </Text>
-            <Item
-              item={listaRemedio[0]}
-              onFinalizarRemedio={onFinalizarRemedio}
-              onPressNovo={() => history.push('/novo', { compartimento: 1 })}
-              onPressVisualizar={(item) => this.onClickVisualizar(item)}
-            />
-          </View>
-          <View style={{ marginTop: 20 }}>
-            <Text style={styles.textoCompartimento}>
-              Compartimento 2
-              </Text>
-            <Item
-              item={listaRemedio[1]}
-              onFinalizarRemedio={onFinalizarRemedio}
-              onPressNovo={() => history.push('/novo', { compartimento: 2 })}
-              onPressVisualizar={(item) => this.onClickVisualizar(item)}
-            />
-          </View>
-          <View style={{ marginTop: 20 }}>
-            <Text style={styles.textoCompartimento}>
-              Compartimento 3
-              </Text>
-            <Item
-              item={listaRemedio[2]}
-              onFinalizarRemedio={onFinalizarRemedio}
-              onPressNovo={() => history.push('/novo', { compartimento: 3 })}
-              onPressVisualizar={(item) => this.onClickVisualizar(item)}
-            />
-          </View>
+          <Item
+            item={listaRemedio[0]}
+            onFinalizarRemedio={onFinalizarRemedio}
+            onPressNovo={() => history.push('/novo', { compartimento: 1 })}
+            onPressVisualizar={(item) => this.onClickVisualizar(item)}
+            compartimento={1}
+          />
+          <Item
+            item={listaRemedio[1]}
+            onFinalizarRemedio={onFinalizarRemedio}
+            onPressNovo={() => history.push('/novo', { compartimento: 2 })}
+            onPressVisualizar={(item) => this.onClickVisualizar(item)}
+            compartimento={2}
+          />
+          <Item
+            item={listaRemedio[2]}
+            onFinalizarRemedio={onFinalizarRemedio}
+            onPressNovo={() => history.push('/novo', { compartimento: 3 })}
+            onPressVisualizar={(item) => this.onClickVisualizar(item)}
+            compartimento={3}
+          />
         </View>
 
       )

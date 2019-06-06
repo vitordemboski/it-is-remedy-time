@@ -59,7 +59,7 @@ class NovoRemedio extends Component {
                     const datetimeInicio = moment().subtract(timeHoras).add(timeHorasFalta);
                     const timeHorasFinal = moment.duration(textoHoras + ':00') * (textoQuantidade / textoQuantDose);
                     const datetimeFinal = moment(datetimeInicio).add(timeHorasFinal);
-                    const listaHistorico = this.calculaHistorico(datetimeInicio, textoHoras + ':00', textoQuantidade / textoQuantDose, textoNome, compartimento);
+                    const listaHistorico = this.calculaHistorico(datetimeInicio, textoHoras + ':00', parseInt(textoQuantidade / textoQuantDose), textoNome, compartimento);
                     const remedio = {
                         IDREMEDIO: Math.floor(Math.random() * 1000000),
                         DESCRICAO: textoNome,
